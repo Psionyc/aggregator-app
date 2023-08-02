@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="3.20631in" height="3.20631in" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 3202.27 3202.27"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil0 {fill:none}
+    .fil1 {fill:#FEFEFC}
+    .fil2 {fill:url(#id0)}
+   ]]>
+  </style>
+  <linearGradient id="id0" gradientUnits="userSpaceOnUse" x1="1575.48" y1="985.86" x2="1575.5" y2="1732.13">
+   <stop offset="0" style="stop-opacity:1; stop-color:#FEFEFC"/>
+   <stop offset="1" style="stop-opacity:1; stop-color:#999999"/>
+  </linearGradient>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <rect class="fil0" x="-0" width="3202.27" height="3202.27"/>
+  <path class="fil1" d="M1967.75 1781.72c-0.35,4.57 -0.83,9.14 -1.42,13.72l0.04 -0.04c52.81,-45.16 237.65,9.02 188.22,-126.84 -26.11,-71.76 15.18,-117.05 63.06,-159.9 227.52,388.18 509.85,874.9 507.74,919.28 -45.95,46.8 -77.62,32.53 -161.66,32.38l-596.4 0.2c-118.93,-1.05 -209.79,-63.49 -208.37,-183.92 1.51,-128.6 184.2,-307.89 207.13,-479.41 4.88,-3.01 5.85,-7.99 1.66,-15.49z"/>
+  <path class="fil2" d="M1509.19 1388.05c32.43,-42.94 46.35,-76.52 109.54,-89.27 60.72,-12.25 116.71,16.03 163.78,58.8 42.33,-67.99 130.29,-108.78 206.43,-57.19 63.29,42.88 106.77,19.61 137.5,-17.95 -88.74,-151.18 -163.69,-278.48 -201.4,-344.54 -406.64,-712.25 -352.24,-686.24 -502.19,-428.5 -54.18,93.13 -291.1,467.19 -287.58,547.69 3.13,71.82 223.89,529.63 373.92,330.94z"/>
+  <path class="fil1" d="M1194.35 2458.72c25.54,-29.12 140.22,-237.79 159.26,-283.29 61.48,-146.94 11.88,-244.76 -52.52,-349.34 -37.64,-61.12 -126.54,-232.07 -188.49,-260.41 -149.96,-68.59 -213.11,100 -260.89,181.17 -112.26,190.7 -220.46,380.81 -332.42,575.53 -23.2,40.35 -77.21,113.34 -9.49,134.45l684.56 1.88z"/>
+ </g>
+</svg>
