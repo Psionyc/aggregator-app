@@ -42,6 +42,9 @@ export default function Home() {
       }} />
 
       <div className="grid grid-cols-1 md:grid-cols-2">
+      <div className="flex flex-col gap-4 items-center md:hidden">
+          <Image src={hero} alt="hero" className='w-full mt-8 md:t-0 max-w-[480px] md:max-w-[512px' />
+        </div>
 
         <div className="flex flex-col gap-4 mt-[50px] md:mt-[100px] justify-center items-center md:items-start sm:justify-start">
           <p className="text-[48px] text-center sm:text-start sm:text-[60px] xl:text-[60px] font-[900] tracking-tighter space-y-[-5px]">Powerful <span className="text-[#68E4FF]">Dex</span> <br /> Aggregator</p>
@@ -55,7 +58,7 @@ export default function Home() {
             <Button variant={"outline"} className="">Docs</Button>
           </div>
         </div>
-        <div className="flex flex-col gap-4 items-center ">
+        <div className="md:flex flex-col gap-4 items-center hidden">
           <Image src={hero} alt="hero" className='w-full mt-8 md:t-0 max-w-[480px] md:max-w-[512px' />
         </div>
       </div>
