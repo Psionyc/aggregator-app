@@ -3,7 +3,7 @@
 
 import Image from 'next/image'
 import logo from '@/assets/main.svg'
-import hero from "@/assets/images/hero.png"
+import hero from "@/assets/images/ipad.png"
 import back_image from "@/assets/icons/back_image.svg"
 import { Button } from '@/components/ui/button'
 import { useWindowScroll, useWindowSize } from "@reactuses/core"
