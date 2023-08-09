@@ -30,7 +30,7 @@ export default function Home() {
   return (
 
 
-    <main className="w-full  px-[10px] md:px-[80px] lg:px-[100px] xl:[200px] text-white">
+    <main className="w-full  px-[16px] md:px-[80px] lg:px-[100px] xl:[200px] text-white">
 
       {/* <div  className="overlay z-10 bg-black w-full h-full fixed top-0 left-0 flex items-center justify-center  lg:hidden">
             <p className="font-bold text-center text-[24px]">This Device Is Currently Unsupported</p>
@@ -43,23 +43,21 @@ export default function Home() {
 
       <div className="grid grid-cols-1 md:grid-cols-2">
       <div className="flex flex-col gap-4 items-center md:hidden">
-          <Image src={hero} alt="hero" className='w-full mt-8 md:t-0 max-w-[480px] md:max-w-[512px' />
+          <Image src={hero} alt="hero" className='w-full mt-8 md:t-0 max-w-[480px] md:max-w-[512px]' />
         </div>
 
         <div className="flex flex-col gap-4 mt-[50px] md:mt-[100px] justify-center items-center md:items-start sm:justify-start">
-          <p className="text-[48px] text-center sm:text-start sm:text-[60px] xl:text-[60px] font-[900] tracking-tighter space-y-[-5px]">Powerful <span className="text-[#68E4FF]">Dex</span> <br /> Aggregator</p>
-          <p className="text-[16px] md:text-[20px] font-medium text-center md:text-start">
-            That offers seamless DeFi experience to
-            traders and builders, Securing Best Prices
-            for You Eternally!
+          <p className="text-[48px] text-center sm:text-start md:text-[48px] xl:text-[60px] font-[900] tracking-tighter space-y-[-5px]">Powerful <span className="text-[#68E4FF]">DeFi</span> <br />Tools</p>
+          <p className="text-[16px] lg:text-[20px] font-medium text-center md:text-start">
+          The aggregator represents a robust DeFi toolbox, introducing centralized financial proficiency to the decentralized finance realm within the Base Network.
           </p>
           <div className="flex flex-row gap-4">
             <Button className="bg-[#68E4FF] text-black">Launch Dapp</Button>
             <Button variant={"outline"} className="">Docs</Button>
           </div>
         </div>
-        <div className="md:flex flex-col gap-4 items-center hidden">
-          <Image src={hero} alt="hero" className='w-full mt-8 md:t-0 max-w-[480px] md:max-w-[512px' />
+        <div className="md:flex flex-col gap-4 items-center justify-center hidden">
+          <Image src={hero} alt="hero" className='w-full mt-8 md:t-0 max-w-[480px] md:max-w-[512px] ' />
         </div>
       </div>
 
@@ -68,6 +66,7 @@ export default function Home() {
           <p className="font-bold text-[#68E4FF] text-4xl w-full text-center">What we offer</p>
           <p className="font-medium text-white text-md w-full text-center mt-4">Theaggregator is the most powerful DEX aggregator on Base Network</p>
           <div className="flex flex-col md:flex-row gap-8 justify-center mt-4 font-semibold">
+            <div className="flex p-8 border-[2px] border-[#68E4FF] rounded-[12px] text-[18px] md:text-[24px] justify-center text-center">ORDERBOOK TRADE</div>
             <div className="flex p-8 border-[2px] border-[#68E4FF] rounded-[12px] text-[18px] md:text-[24px] justify-center text-center">SWAP AGGREGATOR</div>
             <div className="flex p-8 border-[2px] border-[#68E4FF] rounded-[12px] text-[18px] md:text-[24px] justify-center text-center">PORTFOLIO
               MANAGEMENT</div>

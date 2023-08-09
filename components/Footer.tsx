@@ -3,10 +3,10 @@ import logo from "@/assets/main.svg"
 import Link from "next/link";
 
 const Footer = () => {
-    return (<div className="hidden sm:flex px-[20px] md:px-[80px] lg:px-[100px] xl:[200px]  mt-24 py-4 text-white">
+    return (<div className="flex px-[20px] md:px-[80px] lg:px-[100px] xl:[200px]  mt-24 py-4 text-white">
         <div className="flex justify-between w-full">
 
-            <div className="LEFT flex items-center gap-2">
+            <div className="LEFT items-center gap-2 hidden sm:flex">
                 <Image src={logo} height={24} width={24} alt="Logo" />
                 <p>THE AGGREGATOR</p>
             </div>
@@ -15,7 +15,8 @@ const Footer = () => {
                 <Link href={"/"}>Trade</Link>
                 <Link href={"/"}>Manage Portfolio</Link>
             </div>
-            <div className="flex-col flex">
+            <Image src={logo} height={24} width={24} alt="Logo" className="sm:hidden"/>
+            <div className="flex-col hidden sm:flex">
                 <p className="font-semibold">Resources</p>
                 <Link href={"/"}>About</Link>
                 <Link href={"/"}>Docs</Link>
