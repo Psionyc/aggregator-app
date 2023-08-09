@@ -3,7 +3,7 @@ import logo from "@/assets/main.svg"
 import Link from "next/link";
 
 const Footer = () => {
-    return (<div className="flex px-[200px] mt-24 py-4 text-white">
+    return (<div className="hidden sm:flex px-[20px] md:px-[80px] lg:px-[100px] xl:[200px]  mt-24 py-4 text-white">
         <div className="flex justify-between w-full">
 
             <div className="LEFT flex items-center gap-2">
