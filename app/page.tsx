@@ -61,22 +61,22 @@ export default function Home() {
         </div>
       </div>
 
-      <section className="mt-[100px]">
+      <section className="mt-[64px] md:mt-[100px]">
         <div className="flex flex-col">
           <p className="font-bold text-[#68E4FF] text-4xl w-full text-center">What we offer</p>
           <p className="font-medium text-white text-md w-full text-center mt-4">Theaggregator is the most powerful DEX aggregator on Base Network</p>
-          <div className="flex flex-col md:flex-row gap-4 md:gap-8 justify-center mt-4 font-semibold">
-            <div className="flex p-8 border-[2px] border-[#68E4FF] rounded-[12px] text-[18px] md:text-[24px] justify-center text-center">ORDERBOOK TRADE</div>
-            <div className="flex p-8 border-[2px] border-[#68E4FF] rounded-[12px] text-[18px] md:text-[24px] justify-center text-center">SWAP AGGREGATOR</div>
-            <div className="flex p-8 border-[2px] border-[#68E4FF] rounded-[12px] text-[18px] md:text-[24px] justify-center text-center">PORTFOLIO
+          <div className="flex flex-col md:flex-row gap-4 md:gap-8 justify-center mt-4 font-semibold px-4 md:px-0">
+            <div className="flex p-4 md:p-8 border-[2px] border-[#68E4FF] rounded-[12px] text-[18px] md:text-[24px] justify-center text-center">ORDERBOOK TRADE</div>
+            <div className="flex p-4 md:p-8  border-[2px] border-[#68E4FF] rounded-[12px] text-[18px] md:text-[24px] justify-center text-center">SWAP AGGREGATOR</div>
+            <div className="flex p-4 md:p-8  border-[2px] border-[#68E4FF] rounded-[12px] text-[18px] md:text-[24px] justify-center text-center">PORTFOLIO
               MANAGEMENT</div>
-            <div className="flex p-8 border-[2px] border-[#68E4FF] rounded-[12px] text-[18px] md:text-[24px] justify-center text-center">PERPETUAL TRADING</div>
+            <div className="flex p-4 md:p-8 border-[2px] border-[#68E4FF] rounded-[12px] text-[18px] md:text-[24px] justify-center text-center">PERPETUAL TRADING</div>
           </div>
         </div>
       </section>
 
-      <section className="mt-[100px]">
-        <div className="flex flex-col items-center md:items-start">
+      <section className="mt-[64px] md:mt-[100px]">
+        <div className="flex flex-col items-center ">
           <p className="font-bold text-[#68E4FF] text-4xl w-full text-center">Features</p>
           <p className="font-medium text-white text-md w-full text-center mt-4">We offer the following products</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 px-8  gap-8 justify-between mt-8">
