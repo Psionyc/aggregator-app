@@ -99,12 +99,7 @@ export default function Home() {
             </div>
             <div className="flex flex-col items-center  md:items-start">
               <p className="text-[24px] text-white font-semibold text-center md:text-start">Convenience</p>
-              <p className="text-[14px] text-white max-w-[360px] text-center md:text-start">Theaggregator provide a single
-                interface for trading, enabling
-                users to execute trades across
-                different #DEXs without the
-                need to handle multiple accounts
-                or platforms.</p>
+              <p className="text-[14px] text-white max-w-[360px] text-center md:text-start">TheAggregator offers a unified interface designed to facilitate seamless trading experiences. Through this platform, users can effectively execute trades across diverse Decentralized Exchanges (#DEXs), eliminating the necessity of managing numerous accounts or navigating multiple trading platforms.</p>
             </div>
           </div>
         </div>
