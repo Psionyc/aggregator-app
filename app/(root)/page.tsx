@@ -43,14 +43,14 @@ export default function Home() {
       }} />
 
       <div className="grid grid-cols-1 md:grid-cols-2">
-      <div className="flex flex-col gap-4 items-center md:hidden">
+        <div className="flex flex-col gap-4 items-center md:hidden">
           <Image src={hero} alt="hero" className='w-full mt-8 md:t-0 max-w-[480px] md:max-w-[512px]' />
         </div>
 
         <div className="flex flex-col gap-4 mt-[50px] md:mt-[100px] justify-center items-center md:items-start sm:justify-start">
           <p className="text-[48px] text-center sm:text-start md:text-[48px] xl:text-[60px] font-[900] tracking-tighter space-y-[-5px]">Powerful <span className="text-[#68E4FF]">DeFi</span> <br />Tool Box</p>
           <p className="text-[16px] lg:text-[20px] font-medium text-center md:text-start">
-          The aggregator represents a robust DeFi toolbox, introducing centralized financial proficiency to the decentralized finance realm within the Base Network.
+            TheAggregator represents a robust DeFi toolbox, introducing centralized financial proficiency to the decentralized finance realm within the Base Network.
           </p>
           <div className="flex flex-row gap-4">
             <Link href={"/dapp"}><Button className="bg-[#68E4FF] text-black">Launch Dapp</Button></Link>
@@ -65,7 +65,7 @@ export default function Home() {
       <section className="mt-[64px] md:mt-[100px]">
         <div className="flex flex-col">
           <p className="font-bold text-[#68E4FF] text-4xl w-full text-center">What we offer</p>
-          <p className="font-medium text-white text-md w-full text-center mt-4">TheAggregator is the most powerful DEX aggregator on Base Network</p>
+          <p className="font-medium text-white text-md w-full text-center mt-4">TheAggregator is the most powerful DeFi Tool box on Base Network</p>
           <div className="flex flex-col md:flex-row gap-4 md:gap-8 justify-center mt-4 font-semibold px-4 md:px-0">
             <div className="flex p-4 md:p-8 border-[2px] border-[#68E4FF] rounded-[12px] text-[18px] md:text-[24px] justify-center text-center">ORDERBOOK TRADE</div>
             <div className="flex p-4 md:p-8  border-[2px] border-[#68E4FF] rounded-[12px] text-[18px] md:text-[24px] justify-center text-center">SWAP AGGREGATOR</div>
