@@ -8,6 +8,7 @@ import back_image from "@/assets/icons/back_image.svg"
 import { Button } from '@/components/ui/button'
 import { useWindowScroll, useWindowSize } from "@reactuses/core"
 import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 
 export default function Home() {
 
@@ -52,7 +53,7 @@ export default function Home() {
           The aggregator represents a robust DeFi toolbox, introducing centralized financial proficiency to the decentralized finance realm within the Base Network.
           </p>
           <div className="flex flex-row gap-4">
-            <Button className="bg-[#68E4FF] text-black">Launch Dapp</Button>
+            <Link href={"/dapp"}><Button className="bg-[#68E4FF] text-black">Launch Dapp</Button></Link>
             <Button variant={"outline"} className="">Docs</Button>
           </div>
         </div>
@@ -78,8 +79,8 @@ export default function Home() {
       <section className="mt-[64px] md:mt-[100px]">
         <div className="flex flex-col items-center ">
           <p className="font-bold text-[#68E4FF] text-4xl w-full text-center">Features</p>
-          <p className="font-medium text-white text-md w-full text-center mt-4">We offer the following products</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 px-8  gap-8 justify-between mt-8">
+          <p className="font-medium text-white text-md w-full text-center mt-4">Our top-notch features</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3   gap-8 justify-between mt-8">
             <div className="flex flex-col gap-2 items-center  md:items-start">
               <p className="text-[24px] text-white font-semibold text-center md:text-start">Improved Trading
                 Liquidity</p>
