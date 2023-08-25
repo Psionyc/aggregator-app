@@ -11,7 +11,7 @@ function Dapp() {
             }} />
             <h2 className="text-white text-[48px] xl:text-[60px] font-[900]  mb-4 md:mb-8 text-center md:text-start mt-4 mb:mt-4">Our <span className="text-primary">Powerful DeFi</span> Tools</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 md:gap-8">
-                <DappCard description={`Our state-of-the-art platform hosts a Limit Orderbook Exchange 
+                <DappCard url="/dapp/order" description={`Our state-of-the-art platform hosts a Limit Orderbook Exchange 
                 that provides traders with an unparalleled level of trading precision
                 . Users can place meticulously organized orders, 
                 thereby optimizing their trading strategies. 

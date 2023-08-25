@@ -1,4 +1,4 @@
-
+"use client";
 import '@/app/globals.css'
 import Navbar from '@/components/dapp/Navbar'
 import Footer from '@/components/root/Footer'
@@ -20,13 +20,10 @@ export default function DappLayout({
     children: React.ReactNode
 }) {
     return (
-        <html lang="en">
-            <body className={font.className}>
-                <Navbar />
-
-                <div className="flex px-[20px] md:px-[80px] lg:px-[100px] xl:[200px]">{children}</div>
-                <Footer />
-            </body>
-        </html>
+        <>
+            <Navbar />
+            <div className="flex px-[20px] md:px-[80px] lg:px-[100px] xl:[200px]">{children}</div>
+            <Footer />
+        </>
     )
 }

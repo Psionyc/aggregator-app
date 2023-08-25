@@ -10,13 +10,15 @@ import {
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 interface DappCardProps {
     title?: string;
     description?: string;
+    url?: string;
 }
 
-const DappCard: FunctionComponent<DappCardProps> = ({ title, description }: DappCardProps) => {
+const DappCard: FunctionComponent<DappCardProps> = ({ title, description, url }: DappCardProps) => {
     return (<Card className="bg-transparent text-white border-primary">
         <CardHeader>
             <CardTitle>{title ?? `OrderBook Trade`}</CardTitle>
@@ -29,7 +31,9 @@ const DappCard: FunctionComponent<DappCardProps> = ({ title, description }: Dapp
         </CardContent>
         <CardFooter>
             <div className="flex justify-end w-full">
-                <Button className="bg-[#68E4FF] text-black text-[16px]  gap-2">Open Dapp <ExternalLink/></Button>
+              <Link href={ url ?? "/dapp"}>
+              <Button className="bg-[#68E4FF] text-black text-[16px]  gap-2 hover:text-white">Open Dapp <ExternalLink /></Button>
+              </Link>  
             </div>
         </CardFooter>
 

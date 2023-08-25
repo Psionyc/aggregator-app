@@ -1,7 +1,11 @@
+"use client"
+
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assets/main.svg"
 import { Button } from "@/components/ui/button";
+//@ts-ignore
+import { ConnectKitButton } from 'connectkit';
 
 function Navbar() {
     return (
@@ -16,8 +20,8 @@ function Navbar() {
                 <Link href={"/"}>About</Link>
                 <Link href={"/"}>Blog</Link>
             </div> */}
-            <div className="RIGHT">
-                <Button className="bg-[#68E4FF] text-black text-[12px] md:text-[16px]">Connect Wallet</Button>
+            <div suppressHydrationWarning className="RIGHT">
+                <ConnectKitButton />
             </div>
         </div>
     );
