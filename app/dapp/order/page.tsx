@@ -157,12 +157,10 @@ const OrderBook = () => {
                 title: "Token Faucetted Successfully",
             })
             router.refresh()
-        },
-
-        
+        }
     })
 
-  
+
 
     function updateETHAllowance(value: number) {
         setEthAllowance(value)
@@ -273,7 +271,7 @@ const OrderBook = () => {
                         <p>Spendable Balance : {computedETHAllowance} ETH</p>
                         <div className="flex flex-row gap-2">
                             <Button onClick={() => updateETHAllowance(1000)} className="w-full  bg-slate-700 ">Allow</Button>
-                            <Button onClick={() => updateETHAllowance(0)} className="w-full  bg-slate-700 ">Unallow</Button>
+                            <Button disabled onClick={() => updateETHAllowance(0)} className="w-full  bg-slate-700 ">Settle</Button>
                         </div>
                         <Button onClick={() => ethSelfMint?.()} className="w-full  bg-slate-700 ">Faucet</Button>
                     </div>
@@ -284,7 +282,7 @@ const OrderBook = () => {
                         <p>Spendable Balance : {computedUsdcAllowance} USDC </p>
                         <div className="flex flex-row gap-2">
                             <Button onClick={() => updateUsdcAllowance(1000)} className="w-full  bg-slate-700 ">Allow</Button>
-                            <Button onClick={() => updateUsdcAllowance(0)} className="w-full  bg-slate-700 ">Unallow</Button>
+                            <Button disabled onClick={() => updateUsdcAllowance(0)} className="w-full  bg-slate-700 ">Settle</Button>
                         </div>
                         <Button onClick={() => usdcSelfMint?.()} className="w-full  bg-slate-700 ">Faucet</Button>
                     </div>
