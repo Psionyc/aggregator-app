@@ -209,7 +209,7 @@ const OrderBook = () => {
                         {
                             getPricesSellData && (getPricesSellData.priceLevelSells as Array<any>).map((v) => {
 
-                                return <OrderBookListItem key={Math.random()} size={toReadable(v.size as string, 18)} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} orderType="SELL" />
+                                return <OrderBookListItem key={Math.random()} size={Math.abs(toReadable(v.size as string, 18))} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} orderType="SELL" />
                             })
                         }
 
