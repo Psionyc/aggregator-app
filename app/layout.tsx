@@ -3,6 +3,8 @@
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import { Chain, WagmiConfig, configureChains, createConfig } from "wagmi";
+import { HttpLink, from, ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
 //@ts-ignore
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { baseGoerli } from 'viem/chains';
@@ -42,11 +44,24 @@ const config = createConfig(
 
 const font = Poppins({ subsets: ['latin'], weight: ["100", "200", "300", "400", "500", "600", "700", "800"] })
 
-export const metadata: Metadata = {
-    title: 'Dapp',
-    description: 'Aggregator Dapp Space',
 
-}
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors) {
+        graphQLErrors.map(({ message, locations, path }) => {
+            alert(`Graphql error ${message}`);
+        });
+    }
+});
+
+const link = from([
+    errorLink,
+    new HttpLink({ uri: "https://api.studio.thegraph.com/query/51706/orderbook/v0.0.4" }),
+]);
+
+const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: link,
+});
 
 export default function Layout({
     children,
@@ -57,11 +72,14 @@ export default function Layout({
 
         <html lang="en">
             <body suppressHydrationWarning className={font.className}>
-                <WagmiConfig config={config}>
-                    <ConnectKitProvider>
-                        {children}
-                    </ConnectKitProvider>
-                </WagmiConfig>
+                <ApolloProvider client={client}>
+                    <WagmiConfig config={config}>
+                        <ConnectKitProvider>
+                            {children}
+                        </ConnectKitProvider>
+                    </WagmiConfig>
+                </ApolloProvider>
+
                 <Toaster />
             </body>
         </html>

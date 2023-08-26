@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import { bigint } from "zod"
 
 export const to18 = (value: number) => {
@@ -8,8 +9,8 @@ export const to18 = (value: number) => {
     return BigInt(final)
 }
 
-export const to8 = (value: number) => {
-    return BigInt(value * 10 * 10 ** 8)
+export const to9 = (value: number) => {
+    return BigInt(value * 10 ** 9)
 }
 
 export const toNormal = (value: bigint) => {
@@ -17,4 +18,8 @@ export const toNormal = (value: bigint) => {
 
     const divisor = (BigInt(10 ** 18));
     return value / divisor;
+}
+
+export function toReadable(amount: string, decimals: number) {
+    return Number.parseFloat(ethers.formatUnits(amount, decimals));
 }

@@ -5,12 +5,16 @@ import { ColumnDef } from "@tanstack/react-table"
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Order = {
-    orderType: bigint
-    trader: string
-    price: bigint;
-    size: bigint;
-    quantity: bigint;
-    orderTypeName: string;
+  orderType: bigint
+  trader: string
+  price: bigint;
+  size: bigint;
+  quantity: bigint;
+  orderTypeName: string;
+  priceReadable: string
+  sizeReadable: string
+  quantityReadable: string
+
 }
 
 export const columns: ColumnDef<Order>[] = [
@@ -23,15 +27,15 @@ export const columns: ColumnDef<Order>[] = [
     header: "Trader",
   },
   {
-    accessorKey: "price",
-    header: "Price",
+    accessorKey: "priceReadable",
+    header: "Price(USDT)",
   },
   {
-    accessorKey: "quantity",
-    header: "Quantity",
+    accessorKey: "quantityReadable",
+    header: "Quantity(USDT)",
   },
   {
-    accessorKey: "size",
-    header: "Size",
+    accessorKey: "sizeReadable",
+    header: "Size(ETH)",
   },
 ]

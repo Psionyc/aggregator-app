@@ -15,52 +15,83 @@ import OrderTable from "@/components/dapp/order/OrderTable";
 import { toast } from "@/components/ui/use-toast";
 import OrderChart from "@/components/dapp/order/OrderChart";
 import OrderBookListItem from "@/components/dapp/order/ui/OrderBookList";
+import { Code2 } from "lucide-react"
+import { useQuery } from "@apollo/client";
+import { GET_PRICE_LEVEL_BUYS, GET_PRICE_LEVEL_SELLS } from "@/graphql/queries"
+import { ethers } from "ethers";
 
 const OrderBook = () => {
     const { address } = useAccount();
     const [usdcAllowance_, setUsdcAllowance] = useState(1000);
     const [ethAllowance_, setEthAllowance] = useState(1000);
+    const { error: getBuyPriceLevelQueryError, data: getPricesBuyData, loading: getBuyPriceQueryLevelRunning } = useQuery(GET_PRICE_LEVEL_BUYS)
+    const { error: getSellPriceLevelQueryError, data: getPricesSellData, loading: getSellPriceQueryLevelRunning } = useQuery(GET_PRICE_LEVEL_SELLS)
+
+    useEffect(() => {
+        if (getPricesBuyData?.priceLevelBuys) {
+
+            console.log(getPricesBuyData.priceLevelBuys)
+        }
+    }, [getPricesBuyData])
+
 
     //Reads//
 
     const { data: usdcBalance, isLoading: isLoadingUSDCBalance, isSuccess: usdcBalanceSuccess } = useContractRead({
-        address: "0x1cb7AcEEcb808BE920CD9D27cecef62B21a45CA1",
+        address: "0xB2E25d1e4cbb6c23f6322D22Ea8363438BF42A2b",
         abi: erc20ABI,
         functionName: "balanceOf",
         args: [address!],
     })
 
     const { data: usdcAllowance, isLoading: isLoadingUSDCAllowance, isSuccess: usdcAllowanceSuccess, refetch: usdcAllowanceRefecth } = useContractRead({
-        address: "0x1cb7AcEEcb808BE920CD9D27cecef62B21a45CA1",
+        address: "0xB2E25d1e4cbb6c23f6322D22Ea8363438BF42A2b",
         abi: erc20ABI,
         functionName: "allowance",
-        args: [address!, "0xEb25C051616dEE1227B71aEd158E8948309ee630"],
+        args: [address!, "0xE1d58ceFE96823253AB0De612f5Ef5B8FAEFe07b"],
     })
 
+    // const data = useSWR()
+
+    function toReadable(amount: string, decimals: number) {
+        return Number.parseFloat(ethers.formatUnits(amount, decimals));
+    }
+
+
     const { data: ethBalance, isLoading: isLoadingETHBalance, isSuccess: ethBalanceSuccess } = useContractRead({
-        address: "0xD2eC4f4EE95470CEB1fBE30cC2bd5D840E508387",
+        address: "0x7B62C2Aec92234B1A0D16E356678549cE4523b06",
         abi: erc20ABI,
         functionName: "balanceOf",
         args: [address!],
     })
 
     const { data: ethAllowance, isLoading: isLoadingETHAllowance, isSuccess: ethAllowanceSuccess, refetch: ethAllowanceRefecth, } = useContractRead({
-        address: "0xD2eC4f4EE95470CEB1fBE30cC2bd5D840E508387",
+        address: "0x7B62C2Aec92234B1A0D16E356678549cE4523b06",
         abi: erc20ABI,
         functionName: "allowance",
-        args: [address!, "0xEb25C051616dEE1227B71aEd158E8948309ee630"],
+        args: [address!, "0xE1d58ceFE96823253AB0De612f5Ef5B8FAEFe07b"],
     })
 
-    const { data: userOrdersList } = useContractRead({
+    const { data: userOrdersList, refetch: refetchUserOrderList } = useContractRead({
         abi: TetrisOrderBook.abi,
-        address: "0xEb25C051616dEE1227B71aEd158E8948309ee630",
+        address: "0xE1d58ceFE96823253AB0De612f5Ef5B8FAEFe07b",
         functionName: "getOrdersBy",
         args: [address]
 
     })
 
+    const { data: orderSettlements } = useContractRead({
+        abi: TetrisOrderBook.abi,
+        address: "0xE1d58ceFE96823253AB0De612f5Ef5B8FAEFe07b",
+        functionName: "getSettlementBalance",
+    })
+
+    useEffect(() => {
+        console.log(orderSettlements)
+    }, [orderSettlements])
+
     useContractEvent({
-        address: '0xEb25C051616dEE1227B71aEd158E8948309ee630',
+        address: '0xE1d58ceFE96823253AB0De612f5Ef5B8FAEFe07b',
         abi: TetrisOrderBook.abi,
         eventName: "OrderCreated",
         listener(log) {
@@ -82,20 +113,20 @@ const OrderBook = () => {
 
 
     const { write: usdcAddAllowance } = useContractWrite({
-        address: "0x1cb7AcEEcb808BE920CD9D27cecef62B21a45CA1",
+        address: "0xB2E25d1e4cbb6c23f6322D22Ea8363438BF42A2b",
         abi: erc20ABI,
         functionName: "approve",
-        args: ["0xEb25C051616dEE1227B71aEd158E8948309ee630", to18(usdcAllowance_)],
+        args: ["0xE1d58ceFE96823253AB0De612f5Ef5B8FAEFe07b", to18(usdcAllowance_)],
         onSuccess() {
             usdcAllowanceRefecth?.()
         }
     })
 
     const { write: ethAddAllowance } = useContractWrite({
-        address: "0xD2eC4f4EE95470CEB1fBE30cC2bd5D840E508387",
+        address: "0x7B62C2Aec92234B1A0D16E356678549cE4523b06",
         abi: erc20ABI,
         functionName: "approve",
-        args: ["0xEb25C051616dEE1227B71aEd158E8948309ee630", to18(ethAllowance_)],
+        args: ["0xE1d58ceFE96823253AB0De612f5Ef5B8FAEFe07b", to18(ethAllowance_)],
         onSuccess() {
             ethAllowanceRefecth?.()
         }
@@ -130,35 +161,54 @@ const OrderBook = () => {
 
         <div suppressHydrationWarning className="grid grid-cols-12 gap-2">
             <div className="col-span-3 flex flex-col">
-                <div className="orderbookSection flex flex-col gap-2 border-primary border-[1px] p-4 bg-primary/20">
+                <div className="orderbookSection flex flex-col gap-2 border-primary border-[1px] px-8 py-4 bg-primary/20">
                     <p className="text-primary">Orderbook</p>
 
                     <div className="grid grid-cols-2 text-white text-sm">
-                        <div className="main flex items-center flex-col">
+                        <div className="main flex items-start flex-col">
                             <p>Size(ETH)</p>
                         </div>
-                        <div className="quote flex items-center flex-col">
+                        <div className="quote flex items-end flex-col">
                             <p>Price(USDT)</p>
                         </div>
                     </div>
 
                     <div className="flex flex-col">
-                        <OrderBookListItem size={10} price={10} percantage={35} orderType="SELL" />
-                        <OrderBookListItem size={10} price={10} percantage={40} orderType="SELL" />
-                        <OrderBookListItem size={10} price={10} percantage={37} orderType="SELL" />
-                        <OrderBookListItem size={10} price={10} percantage={76} orderType="SELL" />
 
-                        <p className="text-green-500 font-semibold w-full text-center my-2">24.002</p>
+                        {getSellPriceQueryLevelRunning && <p className="animate-pulse text-white w-full text-center">Loading...</p>}
+                        {
+                            getPricesSellData && (getPricesSellData.priceLevelSells as Array<any>).map((v) => {
 
-                        <OrderBookListItem size={10} price={10} percantage={35} />
-                        <OrderBookListItem size={10} price={10} percantage={40} />
+                                return <OrderBookListItem size={toReadable(v.size as string, 18)} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} orderType="SELL" />
+                            })
+                        }
+
+
+                        <p className="text-green-500 font-semibold w-full text-center my-2">1650</p>
+
+                        {getBuyPriceQueryLevelRunning && <p className="animate-pulse text-white w-full text-center">Loading...</p>}
+                        {
+                            getPricesBuyData && (getPricesBuyData.priceLevelBuys as Array<any>).map((v) => {
+
+                                return <OrderBookListItem size={toReadable(v.quantity as string, 18) / toReadable(v.price as string, 9)} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} />
+                            })
+                        }
+
+                        {/* <OrderBookListItem size={10} price={10} percantage={40} />
                         <OrderBookListItem size={10} price={10} percantage={55} />
-                        <OrderBookListItem size={10} price={10} percantage={76} />
+                        <OrderBookListItem size={10} price={10} percantage={76} /> */}
                     </div>
                 </div>
 
-                <div className="flex bg-primary/20 h-[100%] mt-2 border-primary border-[1px]">
+                <div className="flex flex-col bg-primary/20 h-[100%] mt-2 border-primary border-[1px] p-4">
+                    <div className="layer-1">
+                        <p className="text-primary font-medium">Order Events</p>
+                    </div>
 
+                    <div className="w-full h-full flex flex-col items-center justify-center gap-2">
+                        <Code2 size={40} className="text-white" />
+                        <p className="font-semibold text-center text-white">In Development</p>
+                    </div>
                 </div>
             </div>
             <div className="col-span-6 flex-col flex  ">

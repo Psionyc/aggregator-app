@@ -7,13 +7,13 @@ export interface OrderBookListItemProps {
 
 const OrderBookListItem = ({ size, price, orderType, percantage }: OrderBookListItemProps) => {
     return (
-        <div className="grid grid-cols-2 h-[30px] text-white font-medium">
-            <p className="flex items-center flex-col">{price}</p>
+        <div className="grid grid-cols-2 h-[30px] text-white font-semibold">
+            <p className="flex items-start flex-col">{size.toFixed(2)}</p>
             <div className="flex items-center relative">
                 <div style={
                     { width: `${percantage}%`, background: `${(orderType ?? "BUY") == 'BUY' ? 'green' : 'red'}` }
                 } className={` z-[-1] bg-red-500 absolute top-0 right-0 h-full`}></div>
-                <p className="text-center w-full">{size}</p>
+                <p className="text-end w-full mr-[1px]">{price.toFixed(2)}</p>
             </div>
         </div>
     );

@@ -17,8 +17,9 @@ import { useEffect, useMemo, useState } from "react";
 //@ts-ignore
 import { ConnectKitButton } from "connectkit";
 import TetrisOrderBook from "@/assets/contracts/TetrisOrderBook.json"
-import { to18 } from "@/utils/decimals";
+import { to18, to9 } from "@/utils/decimals";
 import { useToast } from "@/components/ui/use-toast";
+import { ethers } from "ethers"
 
 
 
@@ -40,7 +41,7 @@ export interface OrderBookFormProps {
 export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBookFormProps) => {
 
     const [orderBookAddress, setOrderBookAddress] = useState("");
-  
+
     const { address, isConnecting, isDisconnected, isConnected, connector } = useAccount();
     const { toast } = useToast();
 
@@ -48,7 +49,6 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
         setOrderBookAddress(process.env.NEXT_PUBLIC_ORDERBOOK!)
     }, [])
     const form = useForm<z.infer<typeof formSchema>>({
-        mode: "onChange",
         resolver: zodResolver(formSchema),
         defaultValues: {
             orderType,
@@ -60,9 +60,33 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
 
     const { quantity, size, price } = form.getValues();
 
-    const computedQuantity = useMemo(()=> to18(quantity), [quantity])
-    const computedPrice = useMemo(()=> to18(price), [price])
-    const computedSize = useMemo(()=> to18(size), [size])
+    const [computedQuantity, setComputedQuantity] = useState(BigInt(0));
+    const [computedPrice, setComputedPrice] = useState(BigInt(0));
+    const [computedSize, setComputedSize] = useState(BigInt(0));
+
+    function format(value: number) {
+        const dv = value.toString();
+        if (dv.length == 0) {
+            return BigInt(0)
+        }
+        return ethers.parseEther(dv);
+    }
+
+    function decimalFormat(value: number) {
+        const dv = value.toString();
+        if (dv.length == 0) {
+            return BigInt(0)
+        }
+        return ethers.parseUnits(dv, 9)
+    }
+
+
+    useEffect(() => {
+        console.log("Computed values updated")
+        setComputedQuantity(format(quantity))
+        setComputedPrice(decimalFormat(price))
+        setComputedSize(format(size))
+    }, [quantity, price, size])
 
     const [shouldUpdateSize, setShouldUpdateSize] = useState(true);
     const [shouldUpdateQuantity, setShouldUpdateQuantity] = useState(true);
@@ -96,7 +120,7 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
 
     const { isError: createOrderHasError, isLoading: createOrderIsLoading, write: createOrder } = useContractWrite({
         abi: TetrisOrderBook.abi,
-        address: "0xEb25C051616dEE1227B71aEd158E8948309ee630",
+        address: "0xE1d58ceFE96823253AB0De612f5Ef5B8FAEFe07b",
         functionName: "createOrder",
         args: [computedQuantity, computedSize, computedPrice, orderType == "BUY" ? 0 : 1],
         onError(error) {
