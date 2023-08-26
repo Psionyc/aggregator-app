@@ -1,4 +1,3 @@
-"use client";
 import '@/app/globals.css'
 import Navbar from '@/components/dapp/Navbar'
 import Footer from '@/components/root/Footer'
@@ -9,8 +8,8 @@ import { Poppins } from 'next/font/google'
 const font = Poppins({ subsets: ['latin'], weight: ["100", "200", "300", "400", "500", "600", "700", "800"] })
 
 export const metadata: Metadata = {
-    title: 'Dapp',
-    description: 'Aggregator Dapp Space',
+    title: 'The Aggregator | Defi Tools',
+    description: 'The most powerful DeFi toolkit on Base',
 
 }
 
