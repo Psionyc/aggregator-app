@@ -8,7 +8,7 @@ import { Poppins } from 'next/font/google'
 const font = Poppins({ subsets: ['latin'], weight: ["100", "200", "300", "400", "500", "600", "700", "800"] })
 
 export const metadata: Metadata = {
-    title: 'The Aggregator | Defi Tools',
+    title: 'The Aggregator | DeFi Tools',
     description: 'The most powerful DeFi toolkit on Base',
 
 }

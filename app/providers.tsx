@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { Chain, WagmiConfig, configureChains, createConfig } from "wagmi";
 import { HttpLink, from, ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
@@ -21,17 +21,18 @@ const { publicClient, chains } = configureChains(
 );
 
 const config = createConfig(
+
     getDefaultConfig({
         // Required API Keys
         chains,
         publicClient,
-
+        walletConnectProjectId: "8408650bd8857e532460d5bb327303d1",
         // Required
         appName: "TheAggregator",
 
         appDescription: "Your most powerful DeFi tools",
         appUrl: "https://theaggregator.xyz", // your app's url
-        appIcon: "https://family.co/logo.png", // your app's icon, no bigger than 1024x1024px (max. 1MB)
+        appIcon: "", // your app's icon, no bigger than 1024x1024px (max. 1MB)
     }),
 );
 

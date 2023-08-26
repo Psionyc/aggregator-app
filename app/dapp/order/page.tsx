@@ -2,9 +2,10 @@
 
 import { OrderBookForm } from "@/components/dapp/order/OrderbookForms";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useRouter } from "next/navigation";
 
 import { ChevronDown, InfoIcon, PlusCircle } from "lucide-react";
-import { erc20ABI, useAccount, useContractRead, useContractWrite, useContractEvent } from "wagmi";
+import { erc20ABI, useAccount, useContractRead, useContractWrite, useContractEvent, useWaitForTransaction } from "wagmi";
 import TokenDivider from "@/components/dapp/order/ui/TokenDivider";
 import { Button } from "@/components/ui/button";
 import { to18, toNormal } from "@/utils/decimals";
@@ -19,9 +20,11 @@ import { Code2 } from "lucide-react"
 import { useQuery } from "@apollo/client";
 import { GET_PRICE_LEVEL_BUYS, GET_PRICE_LEVEL_SELLS } from "@/graphql/queries"
 import { ethers } from "ethers";
+import TestErc20 from "@/assets/contracts/TestERC20.json";
 
 const OrderBook = () => {
     const { address } = useAccount();
+    const router = useRouter()
     const [usdcAllowance_, setUsdcAllowance] = useState(1000);
     const [ethAllowance_, setEthAllowance] = useState(1000);
     const { error: getBuyPriceLevelQueryError, data: getPricesBuyData, loading: getBuyPriceQueryLevelRunning } = useQuery(GET_PRICE_LEVEL_BUYS)
@@ -118,7 +121,7 @@ const OrderBook = () => {
         functionName: "approve",
         args: ["0xE1d58ceFE96823253AB0De612f5Ef5B8FAEFe07b", to18(usdcAllowance_)],
         onSuccess() {
-            usdcAllowanceRefecth?.()
+            usdcAllowanceRefecth()
         }
     })
 
@@ -128,9 +131,38 @@ const OrderBook = () => {
         functionName: "approve",
         args: ["0xE1d58ceFE96823253AB0De612f5Ef5B8FAEFe07b", to18(ethAllowance_)],
         onSuccess() {
-            ethAllowanceRefecth?.()
+            ethAllowanceRefecth()
         }
     })
+
+    const { write: ethSelfMint } = useContractWrite({
+        address: "0x7B62C2Aec92234B1A0D16E356678549cE4523b06",
+        abi: TestErc20.abi,
+        functionName: "selfMint",
+        onSuccess() {
+            toast({
+                title: "Token Faucetted Successfully",
+            })
+            router.refresh()
+
+        }
+    })
+
+    const { write: usdcSelfMint, data: usdcSelfMintData } = useContractWrite({
+        address: "0xB2E25d1e4cbb6c23f6322D22Ea8363438BF42A2b",
+        abi: TestErc20.abi,
+        functionName: "selfMint",
+        onSuccess() {
+            toast({
+                title: "Token Faucetted Successfully",
+            })
+            router.refresh()
+        },
+
+        
+    })
+
+  
 
     function updateETHAllowance(value: number) {
         setEthAllowance(value)
@@ -179,7 +211,7 @@ const OrderBook = () => {
                         {
                             getPricesSellData && (getPricesSellData.priceLevelSells as Array<any>).map((v) => {
 
-                                return <OrderBookListItem size={toReadable(v.size as string, 18)} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} orderType="SELL" />
+                                return <OrderBookListItem key={Math.random()} size={toReadable(v.size as string, 18)} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} orderType="SELL" />
                             })
                         }
 
@@ -190,7 +222,7 @@ const OrderBook = () => {
                         {
                             getPricesBuyData && (getPricesBuyData.priceLevelBuys as Array<any>).map((v) => {
 
-                                return <OrderBookListItem size={toReadable(v.quantity as string, 18) / toReadable(v.price as string, 9)} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} />
+                                return <OrderBookListItem key={Math.random()} size={toReadable(v.quantity as string, 18) / toReadable(v.price as string, 9)} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} />
                             })
                         }
 
@@ -240,9 +272,10 @@ const OrderBook = () => {
                         <p>Unsettled balance: {0} ETH</p>
                         <p>Spendable Balance : {computedETHAllowance} ETH</p>
                         <div className="flex flex-row gap-2">
-                            <Button onClick={() => updateETHAllowance(1000)} className="w-full">Allow</Button>
-                            <Button onClick={() => updateETHAllowance(0)} className="w-full">Unallow</Button>
+                            <Button onClick={() => updateETHAllowance(1000)} className="w-full  bg-slate-700 ">Allow</Button>
+                            <Button onClick={() => updateETHAllowance(0)} className="w-full  bg-slate-700 ">Unallow</Button>
                         </div>
+                        <Button onClick={() => ethSelfMint?.()} className="w-full  bg-slate-700 ">Faucet</Button>
                     </div>
                     <TokenDivider>USDC</TokenDivider>
                     <div className="flex flex-col gap-2 text-white/70 font-medium my-2">
@@ -250,9 +283,10 @@ const OrderBook = () => {
                         <p>Unsettled balance: {0} USDC</p>
                         <p>Spendable Balance : {computedUsdcAllowance} USDC </p>
                         <div className="flex flex-row gap-2">
-                            <Button onClick={() => updateUsdcAllowance(1000)} className="w-full">Allow</Button>
-                            <Button onClick={() => updateUsdcAllowance(0)} className="w-full">Unallow</Button>
+                            <Button onClick={() => updateUsdcAllowance(1000)} className="w-full  bg-slate-700 ">Allow</Button>
+                            <Button onClick={() => updateUsdcAllowance(0)} className="w-full  bg-slate-700 ">Unallow</Button>
                         </div>
+                        <Button onClick={() => usdcSelfMint?.()} className="w-full  bg-slate-700 ">Faucet</Button>
                     </div>
                 </div>
             </div>
