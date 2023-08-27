@@ -23,7 +23,7 @@
 5. [Project Status](#project-status)
    - [Current Accomplishments](#current-accomplishments)
    - [Ongoing Work](#ongoing-work)
-   - [Innovative Expansions](#innovative-expansions)
+   - [Innovative Expansions](#innovative-expansion)
 
 ## Project Description
 
@@ -39,8 +39,7 @@ TheAggregator is designed to empower users in the decentralized finance (DeFi) s
 4. **Portfolio Manager:** A unified platform to simplify asset management and optimize portfolio performance.
 5. **Payment Gateway:** Seamless integration for credit/debit card cryptocurrency purchases.
 
-### Logo and Images
-![TheAggregator Logo](/images/logo.png)
+
 
 ## Project Solution
 
