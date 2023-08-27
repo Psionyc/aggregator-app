@@ -30,12 +30,6 @@ const OrderBook = () => {
     const { error: getBuyPriceLevelQueryError, data: getPricesBuyData, loading: getBuyPriceQueryLevelRunning } = useQuery(GET_PRICE_LEVEL_BUYS)
     const { error: getSellPriceLevelQueryError, data: getPricesSellData, loading: getSellPriceQueryLevelRunning } = useQuery(GET_PRICE_LEVEL_SELLS)
 
-    useEffect(() => {
-        if (getPricesBuyData?.priceLevelBuys) {
-
-            console.log(getPricesBuyData.priceLevelBuys)
-        }
-    }, [getPricesBuyData])
 
 
     //Reads//
@@ -83,36 +77,24 @@ const OrderBook = () => {
 
     })
 
-    const { data: orderSettlements } = useContractRead({
+    const { data: orderSettlements, isLoading: orderSettlementsIsLoading, } = useContractRead({
         abi: TetrisOrderBook.abi,
         address: "0xE1d58ceFE96823253AB0De612f5Ef5B8FAEFe07b",
         functionName: "getSettlementBalance",
     })
 
-    useEffect(() => {
-        console.log(orderSettlements)
-    }, [orderSettlements])
 
     useContractEvent({
         address: '0xE1d58ceFE96823253AB0De612f5Ef5B8FAEFe07b',
         abi: TetrisOrderBook.abi,
         eventName: "OrderCreated",
         listener(log) {
-            console.log(log)
+
             toast({
-                title: "Order Created",
-                description: log.toString(),
+                title: "Order Created Successfully",
             })
         },
     })
-
-    useEffect(() => {
-        console.log(usdcAllowance)
-        console.log(userOrdersList)
-    }, [usdcAllowance, userOrdersList])
-
-    //Writes//
-
 
 
     const { write: usdcAddAllowance } = useContractWrite({
@@ -164,7 +146,6 @@ const OrderBook = () => {
 
     function updateETHAllowance(value: number) {
         setEthAllowance(value)
-        console.log(ethAllowance_)
         ethAddAllowance?.()
     }
 
@@ -224,9 +205,6 @@ const OrderBook = () => {
                             })
                         }
 
-                        {/* <OrderBookListItem size={10} price={10} percantage={40} />
-                        <OrderBookListItem size={10} price={10} percantage={55} />
-                        <OrderBookListItem size={10} price={10} percantage={76} /> */}
                     </div>
                 </div>
 
