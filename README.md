@@ -23,7 +23,7 @@
 5. [Project Status](#project-status)
    - [Current Accomplishments](#current-accomplishments)
    - [Ongoing Work](#ongoing-work)
-   - [Upcoming Plans](#upcoming-plans)
+   - [Innovative Expansions](#innovative-expansions)
 
 ## Project Description
 
@@ -40,7 +40,7 @@ TheAggregator is designed to empower users in the decentralized finance (DeFi) s
 5. **Payment Gateway:** Seamless integration for credit/debit card cryptocurrency purchases.
 
 ### Logo and Images
-![TheAggregator Logo](images/logo.png)
+![TheAggregator Logo](/images/logo.png)
 
 ## Project Solution
 
@@ -103,4 +103,3 @@ Thank you for your interest in TheAggregator project. We are committed to drivin
 
 For more information, updates, and engagement, please visit our [official website](http://theaggregator.xyz/) and [Twitter](https://twitter.com/theaggregator_).
 ```
-
