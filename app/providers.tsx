@@ -8,8 +8,7 @@ import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { baseGoerli } from 'viem/chains';
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { Toaster } from '@/components/ui/toaster';
-import Aos from "aos"
-import "aos/dist/aos.css"
+
 
 const { publicClient, chains } = configureChains(
     [baseGoerli],
@@ -42,10 +41,6 @@ const config = createConfig(
 
 
 
-
-Aos.init({
-    duration: 500,
-})
 
 
 
