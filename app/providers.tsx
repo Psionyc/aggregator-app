@@ -8,6 +8,8 @@ import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { baseGoerli } from 'viem/chains';
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { Toaster } from '@/components/ui/toaster';
+import Aos from "aos"
+import "aos/dist/aos.css"
 
 const { publicClient, chains } = configureChains(
     [baseGoerli],
@@ -19,6 +21,8 @@ const { publicClient, chains } = configureChains(
         }),
     ],
 );
+
+
 
 const config = createConfig(
 
@@ -39,7 +43,9 @@ const config = createConfig(
 
 
 
-
+Aos.init({
+    duration: 500,
+})
 
 
 
@@ -68,7 +74,6 @@ export default function Providers({
     children: React.ReactNode
 }) {
     return (
-
         <>
             <ApolloProvider client={client}>
                 <WagmiConfig config={config}>
@@ -77,13 +82,8 @@ export default function Providers({
                     </ConnectKitProvider>
                 </WagmiConfig>
             </ApolloProvider>
-
             <Toaster />
         </>
-
-
-
-
     )
 }
 

@@ -20,7 +20,8 @@ import TetrisOrderBook from "@/assets/contracts/TetrisOrderBook.json"
 import { to18, to9 } from "@/utils/decimals";
 import { useToast } from "@/components/ui/use-toast";
 import { ethers } from "ethers"
-
+import { useOrderContext } from "@/app/dapp/order/OrderContext";
+import { useObservable, useComputed } from "@legendapp/state/react";
 
 
 
@@ -40,14 +41,12 @@ export interface OrderBookFormProps {
 
 export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBookFormProps) => {
 
-    const [orderBookAddress, setOrderBookAddress] = useState("");
+    const context = useOrderContext()
 
     const { address, isConnecting, isDisconnected, isConnected, connector } = useAccount();
     const { toast } = useToast();
 
-    useEffect(() => {
-        setOrderBookAddress(process.env.NEXT_PUBLIC_ORDERBOOK!)
-    }, [])
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -58,13 +57,22 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
         },
     })
 
-    const { quantity, size, price } = form.getValues();
 
-    const [computedQuantity, setComputedQuantity] = useState(BigInt(0));
-    const [computedPrice, setComputedPrice] = useState(BigInt(0));
-    const [computedSize, setComputedSize] = useState(BigInt(0));
+
+
+    const { quantity, size, price } = form.watch();
+
+    const computedQuantity = useComputed(() => format(quantity), [quantity])
+    const computedPrice = useComputed(() => decimalFormat(price), [price])
+    const computedSize = useComputed(() => format(size), [size])
+
+    const computedArgs = useComputed(()=>{
+        return [computedQuantity.get(), computedSize.get(), computedPrice.get(), orderType == "BUY" ? 0 : 1]
+    }, [quantity, price, size])
+    const lastUpdated = useObservable<"quantity" | "size">();
 
     function format(value: number) {
+        if (Number.isNaN(value)) return BigInt(0);
         const dv = value.toString();
         if (dv.length == 0) {
             return BigInt(0)
@@ -73,6 +81,7 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
     }
 
     function decimalFormat(value: number) {
+        if (Number.isNaN(value)) return BigInt(0);
         const dv = value.toString();
         if (dv.length == 0) {
             return BigInt(0)
@@ -83,49 +92,74 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
 
     useEffect(() => {
         console.log("Computed values updated")
-        setComputedQuantity(format(quantity))
-        setComputedPrice(decimalFormat(price))
-        setComputedSize(format(size))
+        // computedQuantity.set(format(quantity))
+        // computedPrice.set(decimalFormat(price))
+        // computedSize.set(format(size))
+
+        console.log(computedPrice.get(), computedQuantity.get(), computedSize.get());
     }, [quantity, price, size])
 
     const [shouldUpdateSize, setShouldUpdateSize] = useState(true);
     const [shouldUpdateQuantity, setShouldUpdateQuantity] = useState(true);
+    const [sizeUpdate, setSizeUpdate] = useState(true);
 
 
     useEffect(() => {
-        if (!shouldUpdateSize) {
-            setShouldUpdateSize(true);
+        if (!shouldUpdateQuantity || sizeUpdate) {
             return;
         }
+        setShouldUpdateSize(false);
         console.log(quantity);
-        if (price !== 0) {
+        if (price !== 0 && !Number.isNaN(price)) {
             const newSize = quantity / price;
             form.setValue("size", newSize);
         }
-        setShouldUpdateQuantity(false)
-    }, [quantity, price]);
+        setShouldUpdateSize(true)
+        lastUpdated.set("quantity")
+    }, [quantity]);
 
     useEffect(() => {
-        if (!shouldUpdateQuantity) {
-            setShouldUpdateQuantity(true);
+        if (!shouldUpdateSize || sizeUpdate) {
             return;
         }
-        console.log(computedSize)
-        const newQuantity = size * price;
-        form.setValue("quantity", newQuantity);
-        setShouldUpdateSize(false)
-    }, [size, price]);
+        setShouldUpdateQuantity(false);
+        if (!Number.isNaN(price)) {
+            const newQuantity = size * price;
+            form.setValue("quantity", newQuantity);
+        }
+        setShouldUpdateQuantity(true)
+        lastUpdated.set("size")
+    }, [size]);
+
+    useEffect(() => {
+        setSizeUpdate(true)
+        const lu = lastUpdated.get()
+        if (lu == "size") {
+            const newQuantity = size * price;
+            form.setValue("quantity", newQuantity);
+        } else {
+            if (price <= 0 || price == undefined || Number.isNaN(price)) {
+                form.setValue("size", 0);
+                return
+            }
+            const newSize = quantity / price;
+            form.setValue("size", newSize);
+        }
+
+        setSizeUpdate(false)
+
+    }, [price])
 
     //Order Read and Write
 
     const { isError: createOrderHasError, isLoading: createOrderIsLoading, write: createOrder } = useContractWrite({
         abi: TetrisOrderBook.abi,
-        address: "0xE1d58ceFE96823253AB0De612f5Ef5B8FAEFe07b",
+        address: context!.contractAddress.get(),
         functionName: "createOrder",
-        args: [computedQuantity, computedSize, computedPrice, orderType == "BUY" ? 0 : 1],
+        args: computedArgs.get(),
         onError(error) {
             toast({
-                title: "Preparation Error",
+                title: "Transaction Error",
                 description: error.message,
             })
         },
@@ -137,29 +171,6 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
             form.reset();
         }
     })
-
-
-
-    const { data: usdcBalance, isLoading: isLoadingUSDCBalance, isSuccess: usdcBalanceSuccess } = useContractRead({
-        address: "0x1cb7AcEEcb808BE920CD9D27cecef62B21a45CA1",
-        abi: erc20ABI,
-        functionName: "balanceOf",
-        args: [address!],
-    })
-
-    // const {config: settleOrderConfig } = usePrepareContractWrite({
-    //     address: orderBookAddress as any,
-    //     functionName: "createOrder",
-    //     abi: TetrisOrderBook.abi,
-    //     args: [quantity, size, price, orderType == "BUY" ? 0 : 1],
-    // })
-
-    // const {config: cancelOrderConfig } = usePrepareContractWrite({
-    //     address: orderBookAddress as any,
-    //     functionName: "createOrder",
-    //     abi: TetrisOrderBook.abi,
-    //     args: [quantity, size, price, orderType == "BUY" ? 0 : 1],
-    // })
 
 
 

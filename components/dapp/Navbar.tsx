@@ -14,6 +14,7 @@ function Navbar() {
                 <Image src={logo} height={24} width={24} alt="Logo" />
                 <p className="text-[12px] md:text-[18px]">THE AGGREGATOR</p>
             </div>
+            
             {/* <div className="MIDDLE hidden sm:flex items-center gap-4">
                 <Link href={"/"}>Trade</Link>
                 <Link href={"/"}>Docs</Link>
