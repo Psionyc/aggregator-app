@@ -15,7 +15,7 @@ const { publicClient, chains } = configureChains(
     [
         jsonRpcProvider({
             rpc: (chain: Chain) => {
-                return { http: "https://base-goerli.blastapi.io/fdde1d88-9cdb-4e2e-bfe3-d3ef8d08b66e" };
+                return { http: "https://base-goerli.publicnode.com" };
             },
         }),
     ],
