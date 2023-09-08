@@ -72,7 +72,7 @@ const OrderListItem = ({ orderType = "BUY", price, quantity, size, inputSize, in
             </div>
         }
 
-        <div className="flex justify-end my-2">
+        <div className="flex justify-end mt-auto py-2">
             <Button variant={"destructive"} className="font-semibold" disabled={orderState != BigInt(0)} onClick={() => write?.()}>Cancel</Button>
         </div>
 

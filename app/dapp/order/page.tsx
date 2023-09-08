@@ -23,6 +23,7 @@ import { ethers } from "ethers";
 import TestErc20 from "@/assets/contracts/TestERC20.json";
 import { OrderContextProvider } from "./OrderContext";
 import OrderGrid from "./components/OrderGrid";
+import { OrderStruct } from "./types";
 
 const OrderBook = () => {
     const { address } = useAccount();
@@ -38,7 +39,7 @@ const OrderBook = () => {
 
 
 
-    const { data: usdcBalance, isLoading: isLoadingUSDCBalance, isSuccess: usdcBalanceSuccess } = useContractRead({
+    const { data: usdcBalance, isLoading: isLoadingUSDCBalance, isSuccess: usdcBalanceSuccess, refetch: usdcBalanceRefetch } = useContractRead({
         address: quoteTokenContract.get(),
         abi: erc20ABI,
         functionName: "balanceOf",
@@ -81,7 +82,7 @@ const OrderBook = () => {
     }
 
 
-    const { data: ethBalance, isLoading: isLoadingETHBalance, isSuccess: ethBalanceSuccess } = useContractRead({
+    const { data: ethBalance, isLoading: isLoadingETHBalance, isSuccess: ethBalanceSuccess, refetch: ethBalanceRefetch } = useContractRead({
         address: baseTokenContract.get(),
         abi: erc20ABI,
         functionName: "balanceOf",
@@ -97,15 +98,26 @@ const OrderBook = () => {
 
 
 
-    const { data: orderSettlements, isLoading: orderSettlementsIsLoading, } = useContractRead({
+    const { data: orderSettlements, isLoading: orderSettlementsIsLoading, refetch: refetchOrderSettlements } = useContractRead({
         abi: TetrisOrderBook.abi,
         address: orderbookContract.get(),
-        functionName: "getSettlementBalance"
+        functionName: "getSettlementBalance",
+        account: address,
     })
 
     useEffect(() => {
         console.log(orderSettlements);
     }, [orderSettlements])
+
+    async function refetchData() {
+        await ethAllowanceRefecth?.()
+        await usdcAllowanceRefecth?.()
+        await sellOrderRefetch?.()
+        await buyOrderRefetch?.()
+        await refetchOrderSettlements?.()
+        await usdcBalanceRefetch?.()
+        await ethAllowanceRefecth?.()
+    }
 
 
     useContractEvent({
@@ -117,10 +129,20 @@ const OrderBook = () => {
                 title: "Order Created Successfully",
             })
 
-            await ethAllowanceRefecth?.()
-            await usdcAllowanceRefecth?.()
-            await sellOrderRefetch?.()
-            await buyOrderRefetch?.()
+            await refetchData()
+        },
+    })
+
+    useContractEvent({
+        address: orderbookContract.get(),
+        abi: TetrisOrderBook.abi,
+        eventName: "OrderCreated",
+        async listener(log) {
+            toast({
+                title: "Order Created Successfully",
+            })
+
+            await refetchData()
         },
     })
 
@@ -136,6 +158,18 @@ const OrderBook = () => {
 
         },
     })
+
+    useContractEvent({
+        address: orderbookContract.get(),
+        abi: TetrisOrderBook.abi,
+        eventName: "OrderCancelled",
+        async listener(log: any) {
+            const order = log.args.order as OrderStruct
+            console.log("Order Cancelled", log)
+            await refetchData()
+        },
+    })
+
     useContractEvent({
         address: orderbookContract.get(),
         abi: TetrisOrderBook.abi,
@@ -172,11 +206,11 @@ const OrderBook = () => {
         address: baseTokenContract.get(),
         abi: TestErc20.abi,
         functionName: "selfMint",
-        onSuccess() {
+        async onSuccess() {
             toast({
                 title: "Token Faucetted Successfully",
             })
-            router.refresh()
+            await refetchData()
 
         }
     })
@@ -185,11 +219,29 @@ const OrderBook = () => {
         address: quoteTokenContract.get(),
         abi: TestErc20.abi,
         functionName: "selfMint",
-        onSuccess() {
+        async onSuccess() {
             toast({
                 title: "Token Faucetted Successfully",
             })
-            router.refresh()
+            await refetchData()
+        }
+    })
+
+    const { write: settleBase } = useContractWrite({
+        address: orderbookContract.get(),
+        abi: TetrisOrderBook.abi,
+        functionName: "settleBaseToken",
+        async onSuccess(){
+            await refetchData()
+        }
+    })
+
+    const { write: settleQuote } = useContractWrite({
+        address: orderbookContract.get(),
+        abi: TetrisOrderBook.abi,
+        functionName: "settleQuoteToken",
+        async onSuccess(){
+            await refetchData()
         }
     })
 
@@ -298,22 +350,22 @@ const OrderBook = () => {
                             <TokenDivider>ETH</TokenDivider>
                             <div className="flex flex-col gap-2 text-white/70 font-medium my-2">
                                 <p>Wallet balance: {toNormal(ethBalance!).toString()} ETH</p>
-                                <p>Unsettled balance: {(orderSettlements ? (orderSettlements as any)[0].toString() : "Loading")} ETH</p>
+                                <p>Unsettled balance: {(orderSettlements ? toNormal((orderSettlements as any)[0]).toString() : "Loading")} ETH</p>
                                 <p>Spendable Balance : {computedETHAllowance} ETH</p>
                                 <div className="flex flex-row gap-2">
                                     <Button onClick={() => updateETHAllowance(1000)} className="w-full  bg-slate-700 ">Allow</Button>
-                                    <Button disabled onClick={() => updateETHAllowance(0)} className="w-full  bg-slate-700 ">Settle</Button>
+                                    <Button disabled={toNormal((orderSettlements as any)[0]) <= 0} className="w-full  bg-slate-700" onClick={() => settleBase?.()}>Settle</Button>
                                 </div>
                                 <Button onClick={() => ethSelfMint?.()} className="w-full  bg-slate-700 ">Faucet</Button>
                             </div>
                             <TokenDivider>USDC</TokenDivider>
                             <div className="flex flex-col gap-2 text-white/70 font-medium my-2">
                                 <p>Wallet balance: {toNormal(usdcBalance ?? BigInt(100)).toString()} USDC</p>
-                                <p>Unsettled balance: {(orderSettlements ? (orderSettlements as any)[1].toString() : "Loading")} USDC</p>
+                                <p>Unsettled balance: {(orderSettlements ? toNormal((orderSettlements as any)[1]).toString() : "Loading")} USDC</p>
                                 <p>Spendable Balance : {computedUsdcAllowance} USDC </p>
                                 <div className="flex flex-row gap-2">
                                     <Button onClick={() => updateUsdcAllowance(1000)} className="w-full  bg-slate-700 ">Allow</Button>
-                                    <Button disabled={true} onClick={() => updateUsdcAllowance(0)} className="w-full  bg-slate-700 ">Settle</Button>
+                                    <Button disabled={toNormal((orderSettlements as any)[1]) <= 0} className="w-full  bg-slate-700 " onClick={() => settleQuote?.()}>Settle</Button>
                                 </div>
                                 <Button onClick={() => usdcSelfMint?.()} className="w-full  bg-slate-700 ">Faucet</Button>
                             </div>

@@ -48,10 +48,10 @@ function OrderGrid() {
         <section className="user-orders w-full">
             <div className="w-full flex flex-col gap-y-4">
                 <div className="flex sort-parameters gap-4 w-full h-10">
-                    <OrderSortTab className="bg-white/40">OPEN</OrderSortTab>
+                    <OrderSortTab className="bg-white/40">ALL</OrderSortTab>
+                    <OrderSortTab>OPEN</OrderSortTab>
                     <OrderSortTab>CANCELLED</OrderSortTab>
                     <OrderSortTab>DONE</OrderSortTab>
-                    <OrderSortTab>ALL</OrderSortTab>
 
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 w-full">
