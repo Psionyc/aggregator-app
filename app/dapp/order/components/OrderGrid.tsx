@@ -1,23 +1,40 @@
 "use client"
 
-import { useContractRead } from "wagmi";
+import { useContractEvent, useContractRead } from "wagmi";
 import OrderListItem from "@/components/dapp/order/ui/OrderListItem";
 import OrderSortTab from "@/components/dapp/order/ui/OrderSortTab";
 import { useOrderContext } from "../OrderContext";
 import Tetris from "@/assets/contracts/TetrisOrderBook.json"
 import { useEffect } from "react";
 import { OrderStruct } from "../types";
+import { toast } from "@/components/ui/use-toast";
 
 function OrderGrid() {
 
     const context = useOrderContext()
 
-    const { isLoading, isError, data: orderListData } = useContractRead({
+    const { isLoading, isError, data: orderListData, refetch: refetchOrders } = useContractRead({
         abi: Tetris.abi,
         functionName: "getOrders",
         address: context!.contractAddress!.get(),
         args: [context?.account]
     })
+
+    useContractEvent({
+        address: context?.contractAddress.get(),
+        abi: Tetris.abi,
+        eventName: "OrderCreated",
+        async listener(log) {
+            toast({
+                title: "Order Created Successfully",
+            })
+
+            await refetchOrders?.()
+
+
+        },
+    })
+
 
 
 

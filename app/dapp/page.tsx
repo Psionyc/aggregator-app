@@ -27,7 +27,7 @@ function Dapp() {
                 with robust and user-friendly financial management solutions`} />
                 <DappCard title="Perpetual Trading" description={`
                 With "TheAggregator," traders can embark on new horizons by engaging in perpetual contracts. This revolutionary feature
-                 introduces a dynamic element to trading, 
+                introduces a dynamic element to trading, 
                 enabling users to hold positions without an expiration date. 
                 The perpetual trading capabilities are a testament to our dedication to fostering 
                 innovation and diversification in trading strategies`} />

@@ -53,11 +53,20 @@ const OrderBook = () => {
     })
 
     const {
-        data: buyOrderLevels
+        data: buyOrderLevels, isLoading: buyOrderLevelsLoading, refetch: buyOrderRefetch
     } = useContractRead({
         address: orderbookContract.get(),
         abi: TetrisOrderBook.abi,
         functionName: "getBuyPriceLevels",
+        args: []
+    })
+
+    const {
+        data: sellOrderLevels, isLoading: sellOrderLevelsLoading, refetch: sellOrderRefetch
+    } = useContractRead({
+        address: orderbookContract.get(),
+        abi: TetrisOrderBook.abi,
+        functionName: "getSellPriceLevels",
         args: []
     })
 
@@ -86,13 +95,7 @@ const OrderBook = () => {
         args: [address!, orderbookContract.get()],
     })
 
-    // const { data: userOrdersList, refetch: refetchUserOrderList } = useContractRead({
-    //     abi: TetrisOrderBook.abi,
-    //     address: orderbookContract.get(),
-    //     functionName: "getOrdersBy",
-    //     args: [address]
 
-    // })
 
     const { data: orderSettlements, isLoading: orderSettlementsIsLoading, } = useContractRead({
         abi: TetrisOrderBook.abi,
@@ -109,10 +112,15 @@ const OrderBook = () => {
         address: orderbookContract.get(),
         abi: TetrisOrderBook.abi,
         eventName: "OrderCreated",
-        listener(log) {
+        async listener(log) {
             toast({
                 title: "Order Created Successfully",
             })
+
+            await ethAllowanceRefecth?.()
+            await usdcAllowanceRefecth?.()
+            await sellOrderRefetch?.()
+            await buyOrderRefetch?.()
         },
     })
 
@@ -124,6 +132,8 @@ const OrderBook = () => {
             toast({
                 title: "Order Matched Successfully",
             })
+
+
         },
     })
     useContractEvent({
@@ -144,7 +154,7 @@ const OrderBook = () => {
         functionName: "approve",
         args: [orderbookContract.get(), to18(usdcAllowance_)],
         onSuccess() {
-            usdcAllowanceRefecth()
+            usdcAllowanceRefecth?.()
         }
     })
 
@@ -154,7 +164,7 @@ const OrderBook = () => {
         functionName: "approve",
         args: [orderbookContract.get(), to18(ethAllowance_)],
         onSuccess() {
-            ethAllowanceRefecth()
+            ethAllowanceRefecth?.()
         }
     })
 
@@ -228,22 +238,23 @@ const OrderBook = () => {
 
                             <div className="flex flex-col">
 
-                                {getSellPriceQueryLevelRunning && <p className="animate-pulse text-white w-full text-center">Loading...</p>}
+                                {sellOrderLevelsLoading && <p className="animate-pulse text-white w-full text-center">Loading...</p>}
                                 {
-                                    getPricesSellData && (getPricesSellData.priceLevelSells as Array<any>).map((v) => {
+                                    (sellOrderLevels as any) && (sellOrderLevels as Array<any>).map((v) => {
 
-                                        return <OrderBookListItem key={Math.random()} size={Math.abs(toReadable(v.size as string, 18))} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} orderType="SELL" />
+                                        return <OrderBookListItem key={Math.random()} size={toReadable(v.size as string, 18)} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} orderType="SELL" />
                                     })
                                 }
 
 
                                 <p className="text-green-500 font-semibold w-full text-center my-2">1650</p>
 
-                                {getBuyPriceQueryLevelRunning && <p className="animate-pulse text-white w-full text-center">Loading...</p>}
+                                {buyOrderLevelsLoading && <p className="animate-pulse text-white w-full text-center">Loading...</p>}
                                 {
-                                    getPricesBuyData && (getPricesBuyData.priceLevelBuys as Array<any>).map((v) => {
+                                    buyOrderLevels && (buyOrderLevels as Array<any>).map((v) => {
+                                        console.log(v)
 
-                                        return <OrderBookListItem key={Math.random()} size={toReadable(v.quantity as string, 18) / toReadable(v.price as string, 9)} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} />
+                                        return <OrderBookListItem key={Math.random()} size={toReadable(v.size as string, 18)} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} />
                                     })
                                 }
 
