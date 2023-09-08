@@ -231,7 +231,7 @@ const OrderBook = () => {
         address: orderbookContract.get(),
         abi: TetrisOrderBook.abi,
         functionName: "settleBaseToken",
-        async onSuccess(){
+        async onSuccess() {
             await refetchData()
         }
     })
@@ -240,7 +240,7 @@ const OrderBook = () => {
         address: orderbookContract.get(),
         abi: TetrisOrderBook.abi,
         functionName: "settleQuoteToken",
-        async onSuccess(){
+        async onSuccess() {
             await refetchData()
         }
     })
@@ -354,7 +354,7 @@ const OrderBook = () => {
                                 <p>Spendable Balance : {computedETHAllowance} ETH</p>
                                 <div className="flex flex-row gap-2">
                                     <Button onClick={() => updateETHAllowance(1000)} className="w-full  bg-slate-700 ">Allow</Button>
-                                    <Button disabled={toNormal((orderSettlements as any)[0]) <= 0} className="w-full  bg-slate-700" onClick={() => settleBase?.()}>Settle</Button>
+                                    <Button disabled={orderSettlements ? toNormal((orderSettlements as any)[0]) <= 0 : true} className="w-full  bg-slate-700" onClick={() => settleBase?.()}>Settle</Button>
                                 </div>
                                 <Button onClick={() => ethSelfMint?.()} className="w-full  bg-slate-700 ">Faucet</Button>
                             </div>
@@ -365,7 +365,7 @@ const OrderBook = () => {
                                 <p>Spendable Balance : {computedUsdcAllowance} USDC </p>
                                 <div className="flex flex-row gap-2">
                                     <Button onClick={() => updateUsdcAllowance(1000)} className="w-full  bg-slate-700 ">Allow</Button>
-                                    <Button disabled={toNormal((orderSettlements as any)[1]) <= 0} className="w-full  bg-slate-700 " onClick={() => settleQuote?.()}>Settle</Button>
+                                    <Button disabled={orderSettlements ? toNormal((orderSettlements as any)[1]) <= 0 : true} className="w-full  bg-slate-700 " onClick={() => settleQuote?.()}>Settle</Button>
                                 </div>
                                 <Button onClick={() => usdcSelfMint?.()} className="w-full  bg-slate-700 ">Faucet</Button>
                             </div>
