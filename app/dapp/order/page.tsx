@@ -134,25 +134,25 @@ const OrderBook = () => {
         eventName: "OrderCreated",
         async listener(log) {
             toast({
-                title: "Order Created Successfully",
+                title: "New Order Created",
             })
 
             await refetchData()
         },
     })
 
-    useContractEvent({
-        address: orderbookContract.get(),
-        abi: TetrisOrderBook.abi,
-        eventName: "OrderCreated",
-        async listener(log) {
-            toast({
-                title: "Order Created Successfully",
-            })
+    // useContractEvent({
+    //     address: orderbookContract.get(),
+    //     abi: TetrisOrderBook.abi,
+    //     eventName: "OrderCreated",
+    //     async listener(log) {
+    //         toast({
+    //             title: "Order Created Successfully",
+    //         })
 
-            await refetchData()
-        },
-    })
+    //         await refetchData()
+    //     },
+    // })
 
     useContractEvent({
         address: orderbookContract.get(),
@@ -162,7 +162,6 @@ const OrderBook = () => {
             toast({
                 title: "Order Matched Successfully",
             })
-
 
         },
     })
@@ -183,9 +182,9 @@ const OrderBook = () => {
         abi: TetrisOrderBook.abi,
         eventName: "OrderDone",
         listener(log) {
-            toast({
-                title: "Order Done Successfully",
-            })
+            // toast({
+            //     title: "Order Done Successfully",
+            // })
         },
     })
 
