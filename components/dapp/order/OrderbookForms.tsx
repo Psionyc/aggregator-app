@@ -43,6 +43,12 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
 
     const context = useOrderContext()
 
+
+    const spendableBase = context?.baseSpendableBalance!;
+    const spendableQuote = context?.quoteSpendableBalance!;
+
+
+
     const { address, isConnecting, isDisconnected, isConnected, connector } = useAccount();
     const { toast } = useToast();
 
@@ -66,7 +72,7 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
     const computedPrice = useComputed(() => decimalFormat(price), [price])
     const computedSize = useComputed(() => format(size), [size])
 
-    const computedArgs = useComputed(()=>{
+    const computedArgs = useComputed(() => {
         return [computedQuantity.get(), computedSize.get(), computedPrice.get(), orderType == "BUY" ? 0 : 1]
     }, [quantity, price, size])
     const lastUpdated = useObservable<"quantity" | "size">();
@@ -92,10 +98,6 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
 
     useEffect(() => {
         console.log("Computed values updated")
-        // computedQuantity.set(format(quantity))
-        // computedPrice.set(decimalFormat(price))
-        // computedSize.set(format(size))
-
         console.log(computedPrice.get(), computedQuantity.get(), computedSize.get());
     }, [quantity, price, size])
 
@@ -145,9 +147,7 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
             const newSize = quantity / price;
             form.setValue("size", newSize);
         }
-
         setSizeUpdate(false)
-
     }, [price])
 
     //Order Read and Write
@@ -157,6 +157,7 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
         address: context!.contractAddress.get(),
         functionName: "createOrder",
         args: computedArgs.get(),
+
         onError(error) {
             toast({
                 title: "Transaction Error",
@@ -177,7 +178,7 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            createOrder?.();
+            createOrder?.()
 
         } catch (e) {
             console.log(e)
@@ -207,8 +208,6 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
                     )}
                 />
                 <div className="flex">
-
-
                     <FormField
                         control={form.control}
                         name="size"
@@ -243,8 +242,6 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
                     />
                 </div>
                 {isConnected && !createOrderIsLoading && <Button type="submit" className="w-full bg-slate-700 mt-2">{orderType == "SELL" ? "Sell ETH" : "Buy ETH"}</Button>}
-
-
             </form>
         </Form>
         {isConnecting && <Button type="button" disabled className="w-full bg-slate-700 animate-pulse mt-2">Connecting...</Button>}

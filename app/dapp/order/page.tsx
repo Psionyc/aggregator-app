@@ -27,15 +27,13 @@ import { OrderStruct } from "./types";
 
 const OrderBook = () => {
     const { address } = useAccount();
-    const router = useRouter()
     const [usdcAllowance_, setUsdcAllowance] = useState(1000);
     const [ethAllowance_, setEthAllowance] = useState(1000);
-    const { error: getBuyPriceLevelQueryError, data: getPricesBuyData, loading: getBuyPriceQueryLevelRunning } = useQuery(GET_PRICE_LEVEL_BUYS)
-    const { error: getSellPriceLevelQueryError, data: getPricesSellData, loading: getSellPriceQueryLevelRunning } = useQuery(GET_PRICE_LEVEL_SELLS)
 
     const orderbookContract = useObservable<`0x${string}`>(process.env.NEXT_PUBLIC_ORDERBOOK_CONTRACT as `0x${string}`)
     const baseTokenContract = useObservable(process.env.NEXT_PUBLIC_BASE_CONTRACT as `0x${string}`)
     const quoteTokenContract = useObservable(process.env.NEXT_PUBLIC_QUOTE_CONTRACT as `0x${string}`)
+
 
 
 
@@ -59,6 +57,15 @@ const OrderBook = () => {
         address: orderbookContract.get(),
         abi: TetrisOrderBook.abi,
         functionName: "getBuyPriceLevels",
+        args: []
+    })
+
+    const {
+        data: lastPrice, isLoading: lastPriceLoading, refetch: lastPriceRefetch
+    } = useContractRead({
+        address: orderbookContract.get(),
+        abi: TetrisOrderBook.abi,
+        functionName: "lastPrice",
         args: []
     })
 
@@ -117,6 +124,7 @@ const OrderBook = () => {
         await refetchOrderSettlements?.()
         await usdcBalanceRefetch?.()
         await ethAllowanceRefecth?.()
+        await lastPriceRefetch?.()
     }
 
 
@@ -269,6 +277,9 @@ const OrderBook = () => {
             contractAddress: orderbookContract,
             quoteToken: quoteTokenContract,
             account: address,
+            baseSpendableBalance: ethAllowance ? ethAllowance : BigInt(0),
+            quoteSpendableBalance: usdcAllowance ? usdcAllowance : BigInt(0),
+            lastPrice: lastPrice ? lastPrice as bigint : BigInt(0),
         }}>
 
             <main className="w-full h-full">
@@ -299,7 +310,7 @@ const OrderBook = () => {
                                 }
 
 
-                                <p className="text-green-500 font-semibold w-full text-center my-2">1650</p>
+                                <p className="text-green-500 font-semibold w-full text-center my-2">{lastPrice ? toReadable(lastPrice as string, 9): "Loading"}</p>
 
                                 {buyOrderLevelsLoading && <p className="animate-pulse text-white w-full text-center">Loading...</p>}
                                 {
@@ -350,10 +361,10 @@ const OrderBook = () => {
                             <TokenDivider>ETH</TokenDivider>
                             <div className="flex flex-col gap-2 text-white/70 font-medium my-2">
                                 <p>Wallet balance: {toNormal(ethBalance!).toString()} ETH</p>
-                                <p>Unsettled balance: {(orderSettlements ? toNormal((orderSettlements as any)[0]).toString() : "Loading")} ETH</p>
+                                <p>Unsettled balance: {(orderSettlements ? toReadable((orderSettlements as any)[0], 18).toString() : "Loading")} ETH</p>
                                 <p>Spendable Balance : {computedETHAllowance} ETH</p>
                                 <div className="flex flex-row gap-2">
-                                    <Button onClick={() => updateETHAllowance(1000)} className="w-full  bg-slate-700 ">Allow</Button>
+                                    <Button onClick={() => updateETHAllowance(10000)} className="w-full  bg-slate-700 ">Allow</Button>
                                     <Button disabled={orderSettlements ? toNormal((orderSettlements as any)[0]) <= 0 : true} className="w-full  bg-slate-700" onClick={() => settleBase?.()}>Settle</Button>
                                 </div>
                                 <Button onClick={() => ethSelfMint?.()} className="w-full  bg-slate-700 ">Faucet</Button>
@@ -361,10 +372,10 @@ const OrderBook = () => {
                             <TokenDivider>USDC</TokenDivider>
                             <div className="flex flex-col gap-2 text-white/70 font-medium my-2">
                                 <p>Wallet balance: {toNormal(usdcBalance ?? BigInt(100)).toString()} USDC</p>
-                                <p>Unsettled balance: {(orderSettlements ? toNormal((orderSettlements as any)[1]).toString() : "Loading")} USDC</p>
+                                <p>Unsettled balance: {(orderSettlements ? toReadable((orderSettlements as any)[1], 18) : "Loading")} USDC</p>
                                 <p>Spendable Balance : {computedUsdcAllowance} USDC </p>
                                 <div className="flex flex-row gap-2">
-                                    <Button onClick={() => updateUsdcAllowance(1000)} className="w-full  bg-slate-700 ">Allow</Button>
+                                    <Button onClick={() => updateUsdcAllowance(10000)} className="w-full  bg-slate-700 ">Allow</Button>
                                     <Button disabled={orderSettlements ? toNormal((orderSettlements as any)[1]) <= 0 : true} className="w-full  bg-slate-700 " onClick={() => settleQuote?.()}>Settle</Button>
                                 </div>
                                 <Button onClick={() => usdcSelfMint?.()} className="w-full  bg-slate-700 ">Faucet</Button>

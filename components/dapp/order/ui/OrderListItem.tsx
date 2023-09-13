@@ -45,7 +45,7 @@ const OrderListItem = ({ orderType = "BUY", price, quantity, size, inputSize, in
         abi: Tetris.abi,
         args: [price, id, orderType == "BUY" ? 0 : 1]
     })
-    return (<div className="flex bg-primary/20  relative flex-col px-2">
+    return (<div className="flex bg-primary/20  relative flex-col px-2 overflow-clip">
         {orderType == "BUY" ? <div className="w-full">
             <div className="absolute right-2 top-2 text-green-500 font-bold">BUY</div>
             <p className="text-green-500 font-semibold text-[48px]">{quantity ? toReadable(inputQuantity.toString(), 18) : 200}<span className="text-[20px]">USDC</span></p>
@@ -59,7 +59,7 @@ const OrderListItem = ({ orderType = "BUY", price, quantity, size, inputSize, in
         </div>
             : <div className="w-full">
                 <div className="absolute right-2 top-2 text-red-500 font-bold">SELL</div>
-                <p className="text-red-500 font-semibold text-[48px]">{size ? toReadable(inputSize.toString(), 18) : 0.02}<span className="text-[20px]">ETH</span></p>
+                <p className="text-red-500 font-semibold text-[48px]">{inputSize ? toReadable(inputSize.toString(), 18) : 0.02}<span className="text-[20px]">ETH</span></p>
                 <div className="w-full progres relative">
                     <div className="bg-white/20 absolute top-0 left-0 right-0 w-full h-[3px]"></div>
                     <div className="bg-red-500/70 absolute top-0 left-0 h-[3px]" style={
@@ -68,7 +68,7 @@ const OrderListItem = ({ orderType = "BUY", price, quantity, size, inputSize, in
                         }
                     }></div>
                 </div>
-                <p className="text-white font-semibold text-[16px] text-center w-full mt-2">GET {toReadable(inputQuantity.toString(), 18)} <span className="text-[12px]">USDC</span> at {price ? toReadable(price.toString(), 9) : 1750} <span className="text-[12px]" >ETH</span></p>
+                <p className="text-white font-semibold text-[16px] text-center w-full mt-2">GET {toReadable(inputQuantity.toString(), 18)} <span className="text-[12px]">USDC</span> at {price ? toReadable(price.toString(), 9) : 1750} <span className="text-[12px]" >USDC</span></p>
             </div>
         }
 
