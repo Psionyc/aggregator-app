@@ -80,7 +80,10 @@ const OrderBook = () => {
 
     useEffect(() => {
         console.log(buyOrderLevels);
-        (sellOrderLevels as any).reverse();
+        if (sellOrderLevels) {
+
+            (sellOrderLevels as any).reverse();
+        }
     }, [sellOrderLevels])
 
     // const data = useSWR()
@@ -310,7 +313,7 @@ const OrderBook = () => {
                                 }
 
 
-                                <p className="text-green-500 font-semibold w-full text-center my-2">{lastPrice ? toReadable(lastPrice as string, 9): "Loading"}</p>
+                                <p className="text-green-500 font-semibold w-full text-center my-2">{lastPrice ? toReadable(lastPrice as string, 9) : "Loading"}</p>
 
                                 {buyOrderLevelsLoading && <p className="animate-pulse text-white w-full text-center">Loading...</p>}
                                 {
