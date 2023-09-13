@@ -80,7 +80,8 @@ const OrderBook = () => {
 
     useEffect(() => {
         console.log(buyOrderLevels);
-    }, [buyOrderLevels])
+        (sellOrderLevels as any).reverse();
+    }, [sellOrderLevels])
 
     // const data = useSWR()
 

@@ -60,7 +60,7 @@ const OrderListItem = ({ orderType = "BUY", price, quantity, size, inputSize, in
             : <div className="w-full">
                 <div className="absolute right-2 top-2 text-red-500 font-bold">SELL</div>
                 <p className="text-red-500 font-semibold text-[48px]">{inputSize ? toReadable(inputSize.toString(), 18) : 0.02}<span className="text-[20px]">ETH</span></p>
-                <div className="w-full progres relative overflow-hidden">
+                <div className="w-full progres relative h-[3px] overflow-hidden">
                     <div className="bg-white/20 absolute top-0 left-0 right-0 w-full h-[3px]"></div>
                     <div className="bg-red-500/70 absolute top-0 left-0 h-[3px]" style={
                         {
