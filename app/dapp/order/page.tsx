@@ -81,7 +81,7 @@ const OrderBook = () => {
 
     const buyPriceLevels = useComputed(()=>{
         if(buyOrderLevels){
-            return (buyOrderLevels as Array<any>).sort((a,b) => Number(a.price) - Number(b.price))
+            return (buyOrderLevels as Array<any>).sort((a,b) => Number(b.price) - Number(a.price))
         }
         return []
     }, )
