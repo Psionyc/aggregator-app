@@ -3,7 +3,7 @@
 import { OrderBookForm } from "@/components/dapp/order/OrderbookForms";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useRouter } from "next/navigation";
-import { useObservable } from "@legendapp/state/react"
+import { useComputed, useObservable } from "@legendapp/state/react"
 import { ChevronDown, InfoIcon, PlusCircle } from "lucide-react";
 import { erc20ABI, useAccount, useContractRead, useContractWrite, useContractEvent, useWaitForTransaction } from "wagmi";
 import TokenDivider from "@/components/dapp/order/ui/TokenDivider";
@@ -34,6 +34,7 @@ const OrderBook = () => {
     const baseTokenContract = useObservable(process.env.NEXT_PUBLIC_BASE_CONTRACT as `0x${string}`)
     const quoteTokenContract = useObservable(process.env.NEXT_PUBLIC_QUOTE_CONTRACT as `0x${string}`)
 
+  
 
 
 
@@ -78,13 +79,22 @@ const OrderBook = () => {
         args: []
     })
 
-    useEffect(() => {
-        console.log(buyOrderLevels);
-        if (sellOrderLevels) {
-
-            (sellOrderLevels as any).reverse();
+    const buyPriceLevels = useComputed(()=>{
+        if(buyOrderLevels){
+            return (buyOrderLevels as Array<any>).sort((a,b) => Number(a.price) - Number(b.price))
         }
-    }, [sellOrderLevels])
+        return []
+    }, )
+
+    const sellPriceLevels = useComputed(()=>{
+        if(sellOrderLevels){
+            return (sellOrderLevels as Array<any>).sort((a,b) => Number(b.price) - Number(a.price))
+        }
+        return []
+    }, )
+
+
+
 
     // const data = useSWR()
 
@@ -306,7 +316,7 @@ const OrderBook = () => {
 
                                 {sellOrderLevelsLoading && <p className="animate-pulse text-white w-full text-center">Loading...</p>}
                                 {
-                                    (sellOrderLevels as any) && (sellOrderLevels as Array<any>).map((v) => {
+                                    (sellOrderLevels as any) && (sellPriceLevels.get() as Array<any>).map((v) => {
 
                                         return <OrderBookListItem key={Math.random()} size={toReadable(v.size as string, 18)} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} orderType="SELL" />
                                     })
@@ -317,7 +327,7 @@ const OrderBook = () => {
 
                                 {buyOrderLevelsLoading && <p className="animate-pulse text-white w-full text-center">Loading...</p>}
                                 {
-                                    buyOrderLevels && (buyOrderLevels as Array<any>).map((v) => {
+                                    buyOrderLevels && (buyPriceLevels.get() as Array<any>).map((v) => {
                                         console.log(v)
 
                                         return <OrderBookListItem key={Math.random()} size={toReadable(v.size as string, 18)} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} />
