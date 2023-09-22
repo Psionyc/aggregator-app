@@ -8,7 +8,7 @@ const Footer = () => {
 
             <div className="LEFT items-center gap-2 hidden sm:flex">
                 <Image src={logo} height={24} width={24} alt="Logo" />
-                <p>THE AGGREGATOR</p>
+                <p className="font-semibold">THE AGGREGATOR</p>
             </div>
             <div className="flex-col flex">
                 <p className="font-semibold">Services</p>

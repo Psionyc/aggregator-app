@@ -24,6 +24,7 @@ import TestErc20 from "@/assets/contracts/TestERC20.json";
 import { OrderContextProvider } from "./OrderContext";
 import OrderGrid from "./components/OrderGrid";
 import { OrderStruct } from "./types";
+import { ChartComponent } from "@/components/dapp/order/ui/TradingViewChart";
 
 const OrderBook = () => {
     const { address } = useAccount();
@@ -34,8 +35,19 @@ const OrderBook = () => {
     const baseTokenContract = useObservable(process.env.NEXT_PUBLIC_BASE_CONTRACT as `0x${string}`)
     const quoteTokenContract = useObservable(process.env.NEXT_PUBLIC_QUOTE_CONTRACT as `0x${string}`)
 
-  
 
+    const initialData = [
+        { time: '2018-12-22', value: 1232.51 },
+        { time: '2018-12-23', value: 1271.11 },
+        { time: '2018-12-24', value: 1227.02 },
+        { time: '2018-12-25', value: 1257.32 },
+        { time: '2018-12-26', value: 1225.17 },
+        { time: '2018-12-27', value: 1328.89 },
+        { time: '2018-12-28', value: 1225.46 },
+        { time: '2018-12-29', value: 1223.92 },
+        { time: '2018-12-30', value: 1322.68 },
+        { time: '2018-12-31', value: 1322.67 },
+    ];
 
 
     const { data: usdcBalance, isLoading: isLoadingUSDCBalance, isSuccess: usdcBalanceSuccess, refetch: usdcBalanceRefetch } = useContractRead({
@@ -79,19 +91,19 @@ const OrderBook = () => {
         args: []
     })
 
-    const buyPriceLevels = useComputed(()=>{
-        if(buyOrderLevels){
-            return (buyOrderLevels as Array<any>).sort((a,b) => Number(b.price) - Number(a.price))
+    const buyPriceLevels = useComputed(() => {
+        if (buyOrderLevels) {
+            return (buyOrderLevels as Array<any>).sort((a, b) => Number(b.price) - Number(a.price))
         }
         return []
-    }, )
+    }, [buyOrderLevels])
 
-    const sellPriceLevels = useComputed(()=>{
-        if(sellOrderLevels){
-            return (sellOrderLevels as Array<any>).sort((a,b) => Number(b.price) - Number(a.price))
+    const sellPriceLevels = useComputed(() => {
+        if (sellOrderLevels) {
+            return (sellOrderLevels as Array<any>).sort((a, b) => Number(b.price) - Number(a.price))
         }
         return []
-    }, )
+    }, [sellOrderLevels])
 
 
 
@@ -300,7 +312,7 @@ const OrderBook = () => {
 
                 <div suppressHydrationWarning className="grid grid-cols-12 gap-2">
                     <div className="col-span-3 flex flex-col">
-                        <div className="orderbookSection flex flex-col gap-2 border-primary border-[1px] px-8 py-4 bg-primary/20">
+                        <div className="orderbookSection flex flex-col gap-2 border-primary/25 border-[1px] px-4 py-4 bg-primary/10">
                             <p className="text-primary">Orderbook</p>
 
                             <div className="grid grid-cols-2 text-white text-sm">
@@ -337,7 +349,7 @@ const OrderBook = () => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col bg-primary/20 h-[100%] mt-2 border-primary border-[1px] p-4">
+                        <div className="flex flex-col bg-primary/10 h-[100%] mt-2 border-primary/25 border-[1px] p-4">
                             <div className="layer-1">
                                 <p className="text-primary font-medium">Order Events</p>
                             </div>
@@ -349,18 +361,18 @@ const OrderBook = () => {
                         </div>
                     </div>
                     <div className="col-span-6 flex-col flex  ">
-                        <div className="flex gap-4 items-center bg-primary/20">
-                            <div className="flex items-center px-4 py-2 border-2 border-primary text-white gap-4 w-fit">
+                        <div className="flex gap-4 items-center bg-primary/10">
+                            <div className="flex items-center px-4 py-2 border-2 border-primary/25 text-white gap-4 w-fit">
                                 <p>ETH/USDC</p><ChevronDown className="text-primary" />
                             </div>
                             <PlusCircle className="text-primary" />
                             <InfoIcon className="text-primary" />
                         </div>
-                        <OrderChart />
-                        {/* <div className="flex flex-col border-primary border-[1px] mt-2 h-full bg-primary/20"></div> */}
+                        <ChartComponent data={initialData} />
+                        {/* <div className="flex flex-col border-primary/25 border-[1px] mt-2 h-full bg-primary/10"></div> */}
                     </div>
                     <div className="col-span-3 flex-col gap-y-4 flex  ">
-                        <div className="flex px-4 py-4 border-primary border-2 flex-col bg-primary/20">
+                        <div className="flex px-4 py-4 border-primary/25 border-2 flex-col bg-primary/10">
                             <Tabs defaultValue="account" className="w-full">
                                 <TabsList className="flex justify-center w-full px-0">
                                     <TabsTrigger value="account" className="w-full bg-transparent border-r-0">BUY</TabsTrigger>
@@ -370,7 +382,7 @@ const OrderBook = () => {
                                 <TabsContent value="password"><OrderBookForm orderType="SELL" /></TabsContent>
                             </Tabs>
                         </div>
-                        <div className="flex px-4 py-4 border-primary border-2 flex-col bg-primary/20">
+                        <div className="flex px-4 py-4 border-primary/25 border-2 flex-col bg-primary/10">
                             <TokenDivider>ETH</TokenDivider>
                             <div className="flex flex-col gap-2 text-white/70 font-medium my-2">
                                 <p>Wallet balance: {toNormal(ethBalance!).toString()} ETH</p>

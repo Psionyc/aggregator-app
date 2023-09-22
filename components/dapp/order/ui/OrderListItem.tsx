@@ -45,7 +45,7 @@ const OrderListItem = ({ orderType = "BUY", price, quantity, size, inputSize, in
         abi: Tetris.abi,
         args: [price, id, orderType == "BUY" ? 0 : 1]
     })
-    return (<div className="flex bg-primary/20  relative flex-col px-2 overflow-clip">
+    return (<div className="flex bg-primary/10  relative flex-col px-2 overflow-clip">
         {orderType == "BUY" ? <div className="w-full">
             <div className="absolute right-2 top-2 text-green-500 font-bold">BUY</div>
             <p className="text-green-500 font-semibold text-[48px]">{quantity ? toReadable(inputQuantity.toString(), 18) : 200}<span className="text-[20px]">USDC</span></p>

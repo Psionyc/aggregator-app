@@ -19,7 +19,7 @@ const Navbar = () => {
             </div>
             </Link>
             <div className="MIDDLE hidden sm:flex items-center gap-4">
-                <Link href={"/"}>Trade</Link>
+                <Link href={"/dapp/order"}>Trade</Link>
                 <Link href={"/"}>Docs</Link>
                 <Link href={"/"}>About</Link>
                 <Link href={"/"}>Blog</Link>

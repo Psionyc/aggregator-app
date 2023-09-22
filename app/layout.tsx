@@ -10,11 +10,13 @@ export default function Layout({
 }: {
     children: React.ReactNode
 }) {
+
+    console.log(font.className)
     return (
 
-        <html lang="en">
+        <html lang="en" className={font.className}>
             <body suppressHydrationWarning className={font.className}>
-                <Providers>
+                <Providers font={font}>
                     {children}
                 </Providers>
 

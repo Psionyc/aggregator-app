@@ -8,6 +8,7 @@ import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { baseGoerli } from 'viem/chains';
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { Toaster } from '@/components/ui/toaster';
+import theme from "./theme.json"
 
 
 const { publicClient, chains } = configureChains(
@@ -65,14 +66,15 @@ const client = new ApolloClient({
 
 export default function Providers({
     children,
+    font
 }: {
-    children: React.ReactNode
+    children: React.ReactNode, font: any
 }) {
     return (
         <>
             <ApolloProvider client={client}>
                 <WagmiConfig config={config}>
-                    <ConnectKitProvider>
+                    <ConnectKitProvider customTheme={{ ...theme}}>
                         {children}
                     </ConnectKitProvider>
                 </WagmiConfig>

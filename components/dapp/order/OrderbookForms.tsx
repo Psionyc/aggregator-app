@@ -216,7 +216,7 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
                                 <FormControl>
                                     <div className="flex gap-0 relative">
                                         <div className="absolute text-white right-3 top-0 h-full  flex flex-col justify-center text-sm">ETH</div>
-                                        <div className="flex items-center text-white bg-slate-700 rounded-r-none rounded-l-md px-4 border-white/30 border-[1px] text-sm">Size</div>
+                                        <div className="flex items-center text-white bg-slate-700 hover:bg-slate-700/50 rounded-r-none rounded-l-md px-4 border-white/30 border-[1px] text-sm">Size</div>
                                         <Input placeholder="100" {...field} className="rounded-none bg-transparent border-white/30" />
                                     </div>
                                 </FormControl>
@@ -241,10 +241,10 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
                         )}
                     />
                 </div>
-                {isConnected && !createOrderIsLoading && <Button type="submit" className="w-full bg-slate-700 mt-2">{orderType == "SELL" ? "Sell ETH" : "Buy ETH"}</Button>}
+                {isConnected && !createOrderIsLoading && <Button type="submit" className="w-full bg-slate-700 hover:bg-slate-700/50 mt-2">{orderType == "SELL" ? "Sell ETH" : "Buy ETH"}</Button>}
             </form>
         </Form>
-        {isConnecting && <Button type="button" disabled className="w-full bg-slate-700 animate-pulse mt-2">Connecting...</Button>}
+        {isConnecting && <Button type="button" disabled className="w-full bg-slate-700 hover:bg-slate-700/50 animate-pulse mt-2">Connecting...</Button>}
 
         {isDisconnected && <ConnectKitButton.Custom>
             {({ show, truncatedAddress, ensName }: { show: any, truncatedAddress: string, ensName: string }) => {
@@ -255,6 +255,6 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
                 );
             }}
         </ConnectKitButton.Custom>}
-        {createOrderIsLoading && <Button disabled className="w-full bg-slate-700 animate-pulse mt-2">Sending Transaction...</Button>}
+        {createOrderIsLoading && <Button disabled className="w-full bg-slate-700 hover:bg-slate-700/50 animate-pulse mt-2">Sending Transaction...</Button>}
     </div>);
 }
