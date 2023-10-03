@@ -3,7 +3,7 @@
 import { OrderBookForm } from "@/components/dapp/order/OrderbookForms";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useRouter } from "next/navigation";
-import { useComputed, useObservable } from "@legendapp/state/react"
+import { observer, useComputed, useObservable } from "@legendapp/state/react"
 import { ChevronDown, InfoIcon, PlusCircle } from "lucide-react";
 import { erc20ABI, useAccount, useContractRead, useContractWrite, useContractEvent, useWaitForTransaction } from "wagmi";
 import TokenDivider from "@/components/dapp/order/ui/TokenDivider";
@@ -26,10 +26,10 @@ import OrderGrid from "./components/OrderGrid";
 import { OrderStruct } from "./types";
 import { ChartComponent } from "@/components/dapp/order/ui/TradingViewChart";
 
-const OrderBook = () => {
+const OrderBook = observer(() => {
     const { address } = useAccount();
-    const [usdcAllowance_, setUsdcAllowance] = useState(1000);
-    const [ethAllowance_, setEthAllowance] = useState(1000);
+    const [usdcAllowance_, setUsdcAllowance] = useState(1e9);
+    const [ethAllowance_, setEthAllowance] = useState(1e9);
 
     const orderbookContract = useObservable<`0x${string}`>(process.env.NEXT_PUBLIC_ORDERBOOK_CONTRACT as `0x${string}`)
     const baseTokenContract = useObservable(process.env.NEXT_PUBLIC_BASE_CONTRACT as `0x${string}`)
@@ -80,6 +80,18 @@ const OrderBook = () => {
         abi: TetrisOrderBook.abi,
         functionName: "lastPrice",
         args: []
+    })
+
+    const {
+        data: quoteExcess,
+    } = useContractRead({
+        address: orderbookContract.get(),
+        abi: TetrisOrderBook.abi,
+        functionName: "quoteExcess",
+        args: [],
+        onSuccess(data) {
+            console.log("The excess quote tokens gotten = ", data);
+        },
     })
 
     const {
@@ -221,7 +233,7 @@ const OrderBook = () => {
         functionName: "approve",
         args: [orderbookContract.get(), to18(usdcAllowance_)],
         onSuccess() {
-            usdcAllowanceRefecth?.()
+           refetchData()
         }
     })
 
@@ -231,7 +243,7 @@ const OrderBook = () => {
         functionName: "approve",
         args: [orderbookContract.get(), to18(ethAllowance_)],
         onSuccess() {
-            ethAllowanceRefecth?.()
+            refetchData()
         }
     })
 
@@ -419,6 +431,6 @@ const OrderBook = () => {
             </main>
         </OrderContextProvider>
     );
-}
+})
 
 export default OrderBook;

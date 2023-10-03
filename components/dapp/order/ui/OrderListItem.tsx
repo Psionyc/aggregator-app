@@ -48,7 +48,7 @@ const OrderListItem = ({ orderType = "BUY", price, quantity, size, inputSize, in
     return (<div className="flex bg-primary/10  relative flex-col px-2 overflow-clip">
         {orderType == "BUY" ? <div className="w-full">
             <div className="absolute right-2 top-2 text-green-500 font-bold">BUY</div>
-            <p className="text-green-500 font-semibold text-[48px]">{quantity ? toReadable(inputQuantity.toString(), 18) : 200}<span className="text-[20px]">USDC</span></p>
+            <p className="text-green-500 font-semibold text-[48px]">{inputQuantity ? toReadable(inputQuantity.toString(), 18) : 200}<span className="text-[20px]">USDC</span></p>
             <div className="w-full progres relative">
                 <div className="bg-white/20 absolute top-0 left-0 right-0 w-full h-[3px]"></div>
                 <div className="bg-green-500/70 absolute top-0 left-0  h-[3px]" style={{

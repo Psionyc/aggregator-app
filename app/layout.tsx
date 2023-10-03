@@ -3,7 +3,9 @@ import { Toaster } from "@/components/ui/toaster"
 import { Poppins } from 'next/font/google'
 import Providers from "./providers"
 
-const font = Poppins({ subsets: ['latin'], weight: ["100", "200", "300", "400", "500", "600", "700", "800"] })
+const font = Poppins({ 
+    variable: "--font-poppins",
+    subsets: ['latin'], weight: ["100", "200", "300", "400", "500", "600", "700", "800"] })
 
 export default function Layout({
     children,
@@ -11,10 +13,10 @@ export default function Layout({
     children: React.ReactNode
 }) {
 
-    console.log(font.className)
+   
     return (
 
-        <html lang="en" className={font.className}>
+        <html lang="en" className={font.variable}>
             <body suppressHydrationWarning className={font.className}>
                 <Providers font={font}>
                     {children}
