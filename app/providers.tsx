@@ -1,11 +1,12 @@
 "use client"
 
+import { NextUIProvider } from '@nextui-org/react'
 import { Chain, WagmiConfig, configureChains, createConfig } from "wagmi";
 import { HttpLink, from, ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 //@ts-ignore
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
-import { baseGoerli } from 'viem/chains';
+import { baseGoerli, polygonMumbai } from 'viem/chains';
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { Toaster } from '@/components/ui/toaster';
 import theme from "./theme.json"
@@ -16,7 +17,7 @@ const { publicClient, chains } = configureChains(
     [
         jsonRpcProvider({
             rpc: (chain: Chain) => {
-                return { http: "https://base-goerli.publicnode.com" };
+                return { http: "https://goerli.base.org" };
             },
         }),
     ],
@@ -72,10 +73,13 @@ export default function Providers({
 }) {
     return (
         <>
+
             <ApolloProvider client={client}>
                 <WagmiConfig config={config}>
-                    <ConnectKitProvider customTheme={{ ...theme}}>
-                        {children}
+                    <ConnectKitProvider customTheme={{ ...theme }}>
+                        <NextUIProvider>
+                            {children}
+                        </NextUIProvider>
                     </ConnectKitProvider>
                 </WagmiConfig>
             </ApolloProvider>

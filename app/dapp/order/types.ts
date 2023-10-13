@@ -1,4 +1,4 @@
-import { AddressLike, BigNumberish } from "ethers";
+import { AddressLike } from "ethers";
 
 export type OrderStruct = [
     id: bigint,
@@ -10,8 +10,9 @@ export type OrderStruct = [
     inputQuantity: bigint,
     orderType: bigint,
     timestamp: bigint,
-    orderState: bigint
-] & {
+    orderState: bigint,
+    ioc: boolean
+  ] & {
     id: bigint;
     trader: string;
     price: bigint;
@@ -22,7 +23,8 @@ export type OrderStruct = [
     orderType: bigint;
     timestamp: bigint;
     orderState: bigint;
-};
+    ioc: boolean;
+  };
 
 export enum OrderType {
     BUY,
@@ -33,5 +35,6 @@ export enum OrderState {
     OPEN,
     CANCEL,
     MATCHING,
-    DONE
+    DONE,
+    ALL //For frontend only
 }

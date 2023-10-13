@@ -20,4 +20,12 @@ const OrderContext = createContext<
 
 export const useOrderContext = () => useContext(OrderContext);
 
+export const useNormalize = ()=>{
+
+}
+
+export const useNormalizePrice = () => {
+    
+}
+
 export const OrderContextProvider = OrderContext.Provider

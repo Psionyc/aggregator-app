@@ -22,6 +22,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ethers } from "ethers"
 import { useOrderContext } from "@/app/dapp/order/OrderContext";
 import { useObservable, useComputed } from "@legendapp/state/react";
+import { formatGwei, parseEther, parseGwei, parseUnits } from "viem";
 
 
 
@@ -157,7 +158,9 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
         address: context!.contractAddress.get(),
         functionName: "createOrder",
         args: computedArgs.get(),
-
+        maxFeePerGas: parseGwei("0.1"),
+        maxPriorityFeePerGas: parseGwei("0.09"),
+        
         onError(error) {
             toast({
                 title: "Transaction Error",

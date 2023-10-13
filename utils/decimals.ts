@@ -21,5 +21,5 @@ export const toNormal = (value: bigint) => {
 }
 
 export function toReadable(amount: string, decimals: number) {
-    return Number.parseFloat(ethers.formatUnits(amount, decimals)).toFixed(2);
+    return Number.parseFloat(ethers.formatUnits(amount, decimals)).toFixed(5);
 }

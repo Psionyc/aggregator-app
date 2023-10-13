@@ -1,12 +1,15 @@
 /** @type {import('tailwindcss').Config} */
+const { nextui } = require("@nextui-org/theme");
+
 module.exports = {
   darkMode: ["class"],
   content: [
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   theme: {
     container: {
       center: true,
@@ -16,7 +19,7 @@ module.exports = {
       },
     },
     extend: {
-      colors:{
+      colors: {
         primary: "#68E4FF"
       },
       keyframes: {
@@ -35,5 +38,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), nextui()],
 }

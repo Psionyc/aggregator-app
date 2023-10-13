@@ -233,7 +233,7 @@ const OrderBook = observer(() => {
         functionName: "approve",
         args: [orderbookContract.get(), to18(usdcAllowance_)],
         onSuccess() {
-           refetchData()
+            refetchData()
         }
     })
 
@@ -322,7 +322,7 @@ const OrderBook = observer(() => {
             <main className="w-full h-full">
 
 
-                <div suppressHydrationWarning className="grid grid-cols-12 gap-2">
+                <div suppressHydrationWarning className="grid grid-cols-1 md:grid-cols-12 gap-2">
                     <div className="col-span-3 flex flex-col">
                         <div className="orderbookSection flex flex-col gap-2 border-primary/25 border-[1px] px-4 py-4 bg-primary/10">
                             <p className="text-primary">Orderbook</p>
@@ -361,7 +361,7 @@ const OrderBook = observer(() => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col bg-primary/10 h-[100%] mt-2 border-primary/25 border-[1px] p-4">
+                        <div className="md:flex flex-col hidden  bg-primary/10 h-[100%] mt-2 border-primary/25 border-[1px] p-4">
                             <div className="layer-1">
                                 <p className="text-primary font-medium">Order Events</p>
                             </div>
@@ -372,7 +372,7 @@ const OrderBook = observer(() => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-span-6 flex-col flex  ">
+                    <div className="md:col-span-6 flex-col md:flex hidden ">
                         <div className="flex gap-4 items-center bg-primary/10">
                             <div className="flex items-center px-4 py-2 border-2 border-primary/25 text-white gap-4 w-fit">
                                 <p>ETH/USDC</p><ChevronDown className="text-primary" />
@@ -397,7 +397,7 @@ const OrderBook = observer(() => {
                         <div className="flex px-4 py-4 border-primary/25 border-2 flex-col bg-primary/10">
                             <TokenDivider>ETH</TokenDivider>
                             <div className="flex flex-col gap-2 text-white/70 font-medium my-2">
-                                <p>Wallet balance: {toNormal(ethBalance!).toString()} ETH</p>
+                                <p>Wallet balance: {ethBalance ? toReadable(ethBalance!.toString(), 18).toString() : 0} ETH</p>
                                 <p>Unsettled balance: {(orderSettlements ? toReadable((orderSettlements as any)[0], 18).toString() : "Loading")} ETH</p>
                                 <p>Spendable Balance : {computedETHAllowance} ETH</p>
                                 <div className="flex flex-row gap-2">
@@ -408,7 +408,7 @@ const OrderBook = observer(() => {
                             </div>
                             <TokenDivider>USDC</TokenDivider>
                             <div className="flex flex-col gap-2 text-white/70 font-medium my-2">
-                                <p>Wallet balance: {toNormal(usdcBalance ?? BigInt(100)).toString()} USDC</p>
+                                <p>Wallet balance: {usdcBalance ? toReadable(usdcBalance!.toString(), 18).toString() : 0} USDC</p>
                                 <p>Unsettled balance: {(orderSettlements ? toReadable((orderSettlements as any)[1], 18) : "Loading")} USDC</p>
                                 <p>Spendable Balance : {computedUsdcAllowance} USDC </p>
                                 <div className="flex flex-row gap-2">

@@ -1,0 +1,102 @@
+"use client"
+
+import { OrderStruct } from "@/app/dapp/order/types";
+import { CircularProgress } from "@nextui-org/react";
+import { cn } from "@/lib/utils";
+import { ethers, id } from "ethers"
+import { ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import { useContractWrite } from "wagmi";
+import { useOrderContext } from "@/app/dapp/order/OrderContext";
+import Tetris from "@/assets/contracts/TetrisOrderBook.json"
+
+const TitleAndLabel = ({ title, label, unit }: { title: string, label: ReactNode, unit?: string }) => {
+    return (<div className="flex flex-col gap-1">
+        <p className="text-[14px] text-white/50 font-semibold">{title}</p>
+        <p className="text-[20px] text-white font-medium">{label} {unit}</p>
+    </div>)
+}
+
+const ProgressLabel = ({ value }: { value: any }) => {
+    return (
+        <div className="flex flex-col items-center justify-center">
+            <p className="text-2xl font-semibold">{value}%</p>
+            <p className="text-xl font-medium">FILLED</p>
+        </div>
+    );
+}
+
+const OrderListCard = ({ order }: { order: OrderStruct }) => {
+
+    const context = useOrderContext()
+
+    console.log("Price here is ", order);
+    const priceR = ethers.formatUnits(order.price.toString(), 9);
+    const inputQuantityR = ethers.formatUnits(order.inputQuantity.toString(), 18);
+    const inputSizeR = ethers.formatUnits(order.inputSize.toString(), 18);
+    const sizeR = ethers.formatUnits(order.size.toString(), 18);
+    const quantityR = ethers.formatUnits(order.quantity.toString(), 18);
+    const quantityUsedR = Number(inputQuantityR) - Number(quantityR)
+    const sizeUsedR = Number(inputSizeR) - Number(sizeR)
+
+    const { write, isLoading } = useContractWrite({
+        address: context!.contractAddress.get(),
+        functionName: "cancelOrder",
+        abi: Tetris.abi,
+        args: [order.price, order.id, order.orderType]
+    })
+
+    const percentage = Number(order.orderState) == 0 ? (Number(sizeR) / Number(inputSizeR)) * 100 : Number(sizeUsedR) / Number(inputSizeR) * 100;
+    return (
+        <>
+            <div className={cn("grid grid-cols-2 w-full gap-y-4 bg-primary/20 rounded-[10px] py-2 px-4  border-1", Number(order.orderType) == 0 ? "border-green-600" : "border-red-600")} >
+                <div className="left flex flex-col justify-between items-start">
+                    <div className="flex flex-col gap-4">
+                        <p className="text-[20px] font-semibold text-white">{Number(order.orderType) == 0 ? "BUY ORDER" : "SELL ORDER"}</p>
+                        <TitleAndLabel title="PRICE" label={priceR} unit="USDC" />
+                    </div>
+
+
+
+                    {Number(order.orderType) == 0 ? <div className="flex flex-col gap-4">
+                        <TitleAndLabel title="QUANTITY" label={inputQuantityR} unit="USDC" />
+                        <TitleAndLabel title="EXPECTED BASE" label={inputSizeR} unit="ETH" />
+                    </div> : <div className="flex flex-col gap-4">
+                        <TitleAndLabel title="SIZE" label={inputSizeR} unit="ETH" />
+                        <TitleAndLabel title="EXPECTED QUOTE" label={inputQuantityR} unit="USDC" />
+                    </div>
+                    }
+                </div>
+
+                <div className="right flex flex-col justify-between items-center gap-4 ">
+                    <CircularProgress
+                        classNames={{
+                            svg: "w-36 h-36 drop-shadow-md",
+                            indicator: cn(Number(order.orderType) == 0 ? "stroke-green-600" : "stroke-red-600"),
+                            track: "stroke-white/10",
+                            value: "text-white",
+                        }}
+                        disableAnimation
+                        value={percentage} valueLabel={<ProgressLabel value={percentage} />} strokeWidth={48} showValueLabel />
+
+                    {Number(order.orderType) == 0 ? <div className="flex flex-col gap-4">
+                        <TitleAndLabel title="QUANTITY USED" label={quantityUsedR} unit="USDC" />
+                        <TitleAndLabel title="BASE GOTTEN" label={sizeR} unit="ETH" />
+                    </div> : <div className="flex flex-col gap-4">
+                        <TitleAndLabel title="SIZE USED" label={sizeUsedR} unit="ETH" />
+                        <TitleAndLabel title="QUOTE GOTTEN" label={quantityR} unit="USDC" />
+                    </div>
+
+                    }
+                </div>
+
+                <Button onClick={() => write?.()} disabled={Number(order.orderState) != 0} className="text-semibold text-white px-4 py-3 col-span-2 flex w-full items-center justify-center h-12 bg-red-500 hover:bg-red-500/40 rounded-md">Cancel</Button>
+
+            </div>
+
+
+        </>
+    );
+}
+
+export default OrderListCard;

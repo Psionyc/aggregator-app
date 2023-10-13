@@ -6,19 +6,74 @@ import OrderSortTab from "@/components/dapp/order/ui/OrderSortTab";
 import { useOrderContext } from "../OrderContext";
 import Tetris from "@/assets/contracts/TetrisOrderBook.json"
 import { useEffect } from "react";
-import { OrderStruct } from "../types";
+import { OrderState, OrderStruct } from "../types";
 import { toast } from "@/components/ui/use-toast";
+import { observer, useComputed, useObservable } from "@legendapp/state/react";
+import OrderListCard from "@/components/dapp/order/ui/OrderListCard";
 
-function OrderGrid() {
 
+const OrderGrid = observer(() => {
     const context = useOrderContext()
+
+    const orderState = useObservable(OrderState.OPEN)
+
+    const allOrders = useObservable<Array<OrderStruct>>([]);
+    const cancelledOrders = useComputed<Array<OrderStruct>>(() => {
+        return allOrders.get().filter((v) =>
+            v.orderState == BigInt(OrderState.CANCEL)
+        )
+    })
+
+    const openOrders = useComputed<Array<OrderStruct>>(() => {
+        return allOrders.get().filter((v) =>
+            v.orderState == BigInt(OrderState.OPEN)
+        )
+    })
+    const doneOrders = useComputed<Array<OrderStruct>>(() => {
+
+        return allOrders.get().filter((v) =>
+            v.orderState == BigInt(3)
+        )
+    })
+
+    const currentDisplayedOrders = useComputed<Array<OrderStruct>>(() => {
+        let orders: Array<OrderStruct> = []
+        switch (orderState.get()) {
+            case OrderState.ALL:
+                orders = allOrders.get();
+                break;
+            case OrderState.OPEN:
+                orders = openOrders.get();
+                break;
+            case OrderState.CANCEL:
+                orders = cancelledOrders.get();
+                break;
+            case OrderState.DONE:
+                orders = doneOrders.get();
+                break;
+
+            default:
+                orders = openOrders.get();
+                break;
+        }
+
+        return orders;
+    }, [orderState])
+
+
 
     const { isLoading, isError, data: orderListData, refetch: refetchOrders } = useContractRead({
         abi: Tetris.abi,
         functionName: "getOrders",
         address: context!.contractAddress!.get(),
-        args: [context?.account]
+        args: [context?.account],
+        onSuccess(data: any) {
+            console.log("Order List", data as Array<OrderStruct>)
+            allOrders.set(data);
+        }
     })
+
+
 
     useContractEvent({
         address: context?.contractAddress.get(),
@@ -28,6 +83,8 @@ function OrderGrid() {
             toast({
                 title: "Order Created Successfully",
             })
+
+            console.log(log);
 
             await refetchOrders?.()
         },
@@ -45,22 +102,22 @@ function OrderGrid() {
     return (
         <section className="user-orders w-full">
             <div className="w-full flex flex-col gap-y-4">
-                <div className="flex sort-parameters gap-4 w-full h-10">
-                    <OrderSortTab className="bg-white/40">ALL</OrderSortTab>
-                    <OrderSortTab>OPEN</OrderSortTab>
-                    <OrderSortTab>CANCELLED</OrderSortTab>
-                    <OrderSortTab>DONE</OrderSortTab>
-
+                <div className="flex sort-parameters gap-2 md:gap-4 w-full h-10">
+                    <OrderSortTab onClick={() => orderState.set(OrderState.OPEN)} active={orderState.get() == OrderState.OPEN}>OPEN</OrderSortTab>
+                    <OrderSortTab onClick={() => orderState.set(OrderState.CANCEL)} active={orderState.get() == OrderState.CANCEL}>CANCELLED</OrderSortTab>
+                    <OrderSortTab onClick={() => orderState.set(OrderState.DONE)} active={orderState.get() == OrderState.DONE}>DONE</OrderSortTab>
+                    <OrderSortTab onClick={() => orderState.set(OrderState.ALL)} active={orderState.get() == OrderState.ALL} >ALL</OrderSortTab>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 w-full">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4 w-full">
                     {
-                        (orderListData as Array<OrderStruct>) && (orderListData as Array<OrderStruct>).map((v) => {
-                            return <OrderListItem price={v.price} inputSize={v.inputSize} inputQuantity={v.inputQuantity} key={v.id.toString()} quantity={v.quantity} size={v.size} orderType={v.orderType == BigInt(0) ? "BUY" : "SELL"} id={v.id} orderState={v.orderState} />
+                        (currentDisplayedOrders) && (currentDisplayedOrders.get()).map((v) => {
+                            console.log("The ordertype from here is ", v.orderType);
+                            return <OrderListCard order={v} key={v.timestamp.toString()} />
                         })
                     }
                 </div>
             </div>
         </section>);
-}
+})
 
 export default OrderGrid;
