@@ -26,6 +26,15 @@ export type OrderStruct = [
     ioc: boolean;
   };
 
+  export type OrderLevelStruct = {
+    price: bigint;
+    size: bigint;
+    quantity: bigint;
+    overallSize: bigint;
+    overallQuantity: bigint;
+    orderType: bigint;
+  };
+
 export enum OrderType {
     BUY,
     SELL

@@ -15,7 +15,7 @@ import TetrisOrderBook from "@/assets/contracts/TetrisOrderBook.json"
 import OrderTable from "@/components/dapp/order/OrderTable";
 import { toast } from "@/components/ui/use-toast";
 import OrderChart from "@/components/dapp/order/OrderChart";
-import OrderBookListItem from "@/components/dapp/order/ui/OrderBookList";
+import OrderBookLevelListItem from "@/components/dapp/order/ui/OrderBookList";
 import { Code2 } from "lucide-react"
 import { useQuery } from "@apollo/client";
 import { GET_PRICE_LEVEL_BUYS, GET_PRICE_LEVEL_SELLS } from "@/graphql/queries"
@@ -25,6 +25,7 @@ import { OrderContextProvider } from "./OrderContext";
 import OrderGrid from "./components/OrderGrid";
 import { OrderStruct } from "./types";
 import { ChartComponent } from "@/components/dapp/order/ui/TradingViewChart";
+import OrderPriceLevelList from "./components/OrderPriceLevelList";
 
 const OrderBook = observer(() => {
     const { address } = useAccount();
@@ -64,23 +65,9 @@ const OrderBook = observer(() => {
         args: [address!, orderbookContract.get()],
     })
 
-    const {
-        data: buyOrderLevels, isLoading: buyOrderLevelsLoading, refetch: buyOrderRefetch
-    } = useContractRead({
-        address: orderbookContract.get(),
-        abi: TetrisOrderBook.abi,
-        functionName: "getBuyPriceLevels",
-        args: []
-    })
 
-    const {
-        data: lastPrice, isLoading: lastPriceLoading, refetch: lastPriceRefetch
-    } = useContractRead({
-        address: orderbookContract.get(),
-        abi: TetrisOrderBook.abi,
-        functionName: "lastPrice",
-        args: []
-    })
+
+
 
     const {
         data: quoteExcess,
@@ -94,28 +81,6 @@ const OrderBook = observer(() => {
         },
     })
 
-    const {
-        data: sellOrderLevels, isLoading: sellOrderLevelsLoading, refetch: sellOrderRefetch
-    } = useContractRead({
-        address: orderbookContract.get(),
-        abi: TetrisOrderBook.abi,
-        functionName: "getSellPriceLevels",
-        args: []
-    })
-
-    const buyPriceLevels = useComputed(() => {
-        if (buyOrderLevels) {
-            return (buyOrderLevels as Array<any>).sort((a, b) => Number(b.price) - Number(a.price))
-        }
-        return []
-    }, [buyOrderLevels])
-
-    const sellPriceLevels = useComputed(() => {
-        if (sellOrderLevels) {
-            return (sellOrderLevels as Array<any>).sort((a, b) => Number(b.price) - Number(a.price))
-        }
-        return []
-    }, [sellOrderLevels])
 
 
 
@@ -157,14 +122,10 @@ const OrderBook = observer(() => {
     async function refetchData() {
         await ethAllowanceRefecth?.()
         await usdcAllowanceRefecth?.()
-        await sellOrderRefetch?.()
-        await buyOrderRefetch?.()
         await refetchOrderSettlements?.()
         await usdcBalanceRefetch?.()
         await ethAllowanceRefecth?.()
-        await lastPriceRefetch?.()
     }
-
 
     useContractEvent({
         address: orderbookContract.get(),
@@ -316,7 +277,6 @@ const OrderBook = observer(() => {
             account: address,
             baseSpendableBalance: ethAllowance ? ethAllowance : BigInt(0),
             quoteSpendableBalance: usdcAllowance ? usdcAllowance : BigInt(0),
-            lastPrice: lastPrice ? lastPrice as bigint : BigInt(0),
         }}>
 
             <main className="w-full h-full">
@@ -324,53 +284,7 @@ const OrderBook = observer(() => {
 
                 <div suppressHydrationWarning className="grid grid-cols-1 md:grid-cols-12 gap-2">
                     <div className="col-span-3 flex flex-col">
-                        <div className="orderbookSection flex flex-col gap-2 border-primary/25 border-[1px] px-4 py-4 bg-primary/10">
-                            <p className="text-primary">Orderbook</p>
-
-                            <div className="grid grid-cols-2 text-white text-sm">
-                                <div className="main flex items-start flex-col">
-                                    <p>Size(ETH)</p>
-                                </div>
-                                <div className="quote flex items-end flex-col">
-                                    <p>Price(USDT)</p>
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col">
-
-                                {sellOrderLevelsLoading && <p className="animate-pulse text-white w-full text-center">Loading...</p>}
-                                {
-                                    (sellOrderLevels as any) && (sellPriceLevels.get() as Array<any>).map((v) => {
-
-                                        return <OrderBookListItem key={Math.random()} size={toReadable(v.size as string, 18)} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} orderType="SELL" />
-                                    })
-                                }
-
-
-                                <p className="text-green-500 font-semibold w-full text-center my-2">{lastPrice ? toReadable(lastPrice as string, 9) : "Loading"}</p>
-
-                                {buyOrderLevelsLoading && <p className="animate-pulse text-white w-full text-center">Loading...</p>}
-                                {
-                                    buyOrderLevels && (buyPriceLevels.get() as Array<any>).map((v) => {
-                                        console.log(v)
-
-                                        return <OrderBookListItem key={Math.random()} size={toReadable(v.size as string, 18)} price={toReadable(v.price as string, 9)} percantage={Math.random() * 100} />
-                                    })
-                                }
-
-                            </div>
-                        </div>
-
-                        <div className="md:flex flex-col hidden  bg-primary/10 h-[100%] mt-2 border-primary/25 border-[1px] p-4">
-                            <div className="layer-1">
-                                <p className="text-primary font-medium">Order Events</p>
-                            </div>
-
-                            <div className="w-full h-full flex flex-col items-center justify-center gap-2">
-                                <Code2 size={40} className="text-white" />
-                                <p className="font-semibold text-center text-white">In Development</p>
-                            </div>
-                        </div>
+                        <OrderPriceLevelList />
                     </div>
                     <div className="md:col-span-6 flex-col md:flex hidden ">
                         <div className="flex gap-4 items-center bg-primary/10">

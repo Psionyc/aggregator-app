@@ -1,22 +1,27 @@
+import { cn } from "@/lib/utils";
+import { toReadable } from "@/utils/decimals";
+
 export interface OrderBookListItemProps {
-    size: number,
-    price: number,
+    size: bigint,
+    price: bigint,
     orderType?: "BUY" | "SELL"
-    percantage?: number
+    percantage: number
 }
 
-const OrderBookListItem = ({ size, price, orderType, percantage }: OrderBookListItemProps) => {
+const OrderBookLevelListItem = ({ size, price, orderType, percantage }: OrderBookListItemProps) => {
+    console.log("Percentage is ", percantage)
     return (
-        <div className="grid grid-cols-2 h-[30px] text-white font-semibold">
-            <p className="flex items-start flex-col">{size.toFixed(2)}</p>
+        <div className="grid grid-cols-2 h-[30px] text-white font-semibold relative w-full">
+            <p className="flex items-start flex-col z-20">{toReadable(size.toString(), 18)}</p>
             <div className="flex items-center relative">
-                <div style={
-                    { width: `${percantage}%`, background: `${(orderType ?? "BUY") == 'BUY' ? 'green' : 'red'}` }
-                } className={` z-[-1] bg-red-500 absolute top-0 right-0 h-full`}></div>
-                <p className="text-end w-full mr-[1px]">{price.toFixed(2)}</p>
+                <p className="text-end w-full mr-[3px] z-20">{toReadable(price.toString(), 9)}</p>
             </div>
+            <div style={{
+                width: `${percantage}%`
+            }} className={cn("absolute top-0 right-0 h-full", orderType == "BUY" ? "bg-green-500/50" : "bg-red-500/50")}></div>
+
         </div>
     );
 }
 
-export default OrderBookListItem;
+export default OrderBookLevelListItem;

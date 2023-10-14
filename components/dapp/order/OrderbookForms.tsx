@@ -74,7 +74,7 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
     const computedSize = useComputed(() => format(size), [size])
 
     const computedArgs = useComputed(() => {
-        return [computedQuantity.get(), computedSize.get(), computedPrice.get(), orderType == "BUY" ? 0 : 1]
+        return [computedQuantity.get(), computedSize.get(), computedPrice.get(), orderType == "BUY" ? 0 : 1, false]
     }, [quantity, price, size])
     const lastUpdated = useObservable<"quantity" | "size">();
 
@@ -158,8 +158,6 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
         address: context!.contractAddress.get(),
         functionName: "createOrder",
         args: computedArgs.get(),
-        maxFeePerGas: parseGwei("0.1"),
-        maxPriorityFeePerGas: parseGwei("0.09"),
         
         onError(error) {
             toast({

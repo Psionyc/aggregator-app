@@ -4,40 +4,43 @@ import { OrderStruct } from "@/app/dapp/order/types";
 import { CircularProgress } from "@nextui-org/react";
 import { cn } from "@/lib/utils";
 import { ethers, id } from "ethers"
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useContractWrite } from "wagmi";
 import { useOrderContext } from "@/app/dapp/order/OrderContext";
 import Tetris from "@/assets/contracts/TetrisOrderBook.json"
+import { motion } from "framer-motion"
+import { observer, useObservable } from "@legendapp/state/react";
 
 const TitleAndLabel = ({ title, label, unit }: { title: string, label: ReactNode, unit?: string }) => {
-    return (<div className="flex flex-col gap-1">
+    return (<motion.div layout className="flex flex-col gap-1">
         <p className="text-[14px] text-white/50 font-semibold">{title}</p>
         <p className="text-[20px] text-white font-medium">{label} {unit}</p>
-    </div>)
+    </motion.div>)
 }
 
-const ProgressLabel = ({ value }: { value: any }) => {
+const ProgressLabel = ({ value }: { value: number }) => {
     return (
-        <div className="flex flex-col items-center justify-center">
-            <p className="text-2xl font-semibold">{value}%</p>
+        <motion.div layout className="flex flex-col items-center justify-center">
+            <p className="text-2xl font-semibold">{value.toPrecision(3)}%</p>
             <p className="text-xl font-medium">FILLED</p>
-        </div>
+        </motion.div>
     );
 }
 
-const OrderListCard = ({ order }: { order: OrderStruct }) => {
+const OrderListCard = observer(({ order }: { order: OrderStruct }) => {
 
     const context = useOrderContext()
 
-    console.log("Price here is ", order);
-    const priceR = ethers.formatUnits(order.price.toString(), 9);
+    const priceR = useObservable(ethers.formatUnits(order.price.toString(), 9));
     const inputQuantityR = ethers.formatUnits(order.inputQuantity.toString(), 18);
     const inputSizeR = ethers.formatUnits(order.inputSize.toString(), 18);
     const sizeR = ethers.formatUnits(order.size.toString(), 18);
     const quantityR = ethers.formatUnits(order.quantity.toString(), 18);
     const quantityUsedR = Number(inputQuantityR) - Number(quantityR)
     const sizeUsedR = Number(inputSizeR) - Number(sizeR)
+
+    const percentage = Number(order.orderType) == 0 ? (Number(sizeR) / Number(inputSizeR) * 100) : (Number(sizeUsedR) / Number(inputSizeR) * 100);
 
     const { write, isLoading } = useContractWrite({
         address: context!.contractAddress.get(),
@@ -46,29 +49,33 @@ const OrderListCard = ({ order }: { order: OrderStruct }) => {
         args: [order.price, order.id, order.orderType]
     })
 
-    const percentage = Number(order.orderState) == 0 ? (Number(sizeR) / Number(inputSizeR)) * 100 : Number(sizeUsedR) / Number(inputSizeR) * 100;
+
+
+
     return (
+
+
         <>
-            <div className={cn("grid grid-cols-2 w-full gap-y-4 bg-primary/20 rounded-[10px] py-2 px-4  border-1", Number(order.orderType) == 0 ? "border-green-600" : "border-red-600")} >
-                <div className="left flex flex-col justify-between items-start">
-                    <div className="flex flex-col gap-4">
+            <motion.div layout className={cn("grid grid-cols-2 w-full gap-y-4 bg-primary/20 rounded-[10px] py-2 px-4  border-1", Number(order.orderType) == 0 ? "border-green-600" : "border-red-600")} >
+                <motion.div layout className="left flex flex-col justify-between items-start">
+                    <motion.div className="flex flex-col gap-4">
                         <p className="text-[20px] font-semibold text-white">{Number(order.orderType) == 0 ? "BUY ORDER" : "SELL ORDER"}</p>
-                        <TitleAndLabel title="PRICE" label={priceR} unit="USDC" />
-                    </div>
+                        <TitleAndLabel title="PRICE" label={priceR.get()} unit="USDC" />
+                    </motion.div>
 
 
 
-                    {Number(order.orderType) == 0 ? <div className="flex flex-col gap-4">
+                    {Number(order.orderType) == 0 ? <motion.div layout className="flex flex-col gap-4">
                         <TitleAndLabel title="QUANTITY" label={inputQuantityR} unit="USDC" />
                         <TitleAndLabel title="EXPECTED BASE" label={inputSizeR} unit="ETH" />
-                    </div> : <div className="flex flex-col gap-4">
+                    </motion.div> : <motion.div layout className="flex flex-col gap-4">
                         <TitleAndLabel title="SIZE" label={inputSizeR} unit="ETH" />
                         <TitleAndLabel title="EXPECTED QUOTE" label={inputQuantityR} unit="USDC" />
-                    </div>
+                    </motion.div>
                     }
-                </div>
+                </motion.div>
 
-                <div className="right flex flex-col justify-between items-center gap-4 ">
+                <motion.div layout className="right flex flex-col justify-between items-center gap-4 ">
                     <CircularProgress
                         classNames={{
                             svg: "w-36 h-36 drop-shadow-md",
@@ -76,27 +83,37 @@ const OrderListCard = ({ order }: { order: OrderStruct }) => {
                             track: "stroke-white/10",
                             value: "text-white",
                         }}
-                        disableAnimation
-                        value={percentage} valueLabel={<ProgressLabel value={percentage} />} strokeWidth={48} showValueLabel />
+                        value={percentage} valueLabel={<ProgressLabel value={percentage} />} strokeWidth={48} size="lg" showValueLabel />
 
-                    {Number(order.orderType) == 0 ? <div className="flex flex-col gap-4">
+                    {Number(order.orderType) == 0 ? <motion.div layout className="flex flex-col gap-4">
                         <TitleAndLabel title="QUANTITY USED" label={quantityUsedR} unit="USDC" />
                         <TitleAndLabel title="BASE GOTTEN" label={sizeR} unit="ETH" />
-                    </div> : <div className="flex flex-col gap-4">
+                    </motion.div> : <motion.div layout className="flex flex-col gap-4">
                         <TitleAndLabel title="SIZE USED" label={sizeUsedR} unit="ETH" />
                         <TitleAndLabel title="QUOTE GOTTEN" label={quantityR} unit="USDC" />
-                    </div>
+                    </motion.div>
 
                     }
-                </div>
+                </motion.div>
 
-                <Button onClick={() => write?.()} disabled={Number(order.orderState) != 0} className="text-semibold text-white px-4 py-3 col-span-2 flex w-full items-center justify-center h-12 bg-red-500 hover:bg-red-500/40 rounded-md">Cancel</Button>
+                <Button onClick={() => write?.()} disabled={Number(order.orderState) != 0 || isLoading} className={cn("text-semibold flex items-center justify-center gap-4 text-white px-4 py-3 col-span-2  w-full h-12 bg-red-500 hover:bg-red-500/40 rounded-md", isLoading && "bg-red-500/40")}>
+                    {isLoading && <CircularProgress
 
-            </div>
+                        classNames={{
+                            svg: "w-8 h-8 drop-shadow-md",
+                            indicator: "stroke-white",
+                            track: "stroke-white/10",
+                            value: "text-white",
+                        }}
+                        strokeWidth={48} size="lg" />}
+                    Cancel
+                </Button>
+
+            </motion.div>
 
 
         </>
     );
-}
+})
 
 export default OrderListCard;

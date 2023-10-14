@@ -1,6 +1,6 @@
 "use client"
 
-import { useContractEvent, useContractRead } from "wagmi";
+import { useAccount, useContractEvent, useContractRead } from "wagmi";
 import OrderListItem from "@/components/dapp/order/ui/OrderListItem";
 import OrderSortTab from "@/components/dapp/order/ui/OrderSortTab";
 import { useOrderContext } from "../OrderContext";
@@ -10,10 +10,13 @@ import { OrderState, OrderStruct } from "../types";
 import { toast } from "@/components/ui/use-toast";
 import { observer, useComputed, useObservable } from "@legendapp/state/react";
 import OrderListCard from "@/components/dapp/order/ui/OrderListCard";
+import OrderListCardAbstract from "@/components/dapp/order/ui/OrderListCardAbstract";
+import OrderListCardCombined from "@/components/dapp/order/ui/OrderListCardCombined";
 
 
 const OrderGrid = observer(() => {
     const context = useOrderContext()
+    const { address } = useAccount();
 
     const orderState = useObservable(OrderState.OPEN)
 
@@ -73,29 +76,65 @@ const OrderGrid = observer(() => {
         }
     })
 
-
-
     useContractEvent({
         address: context?.contractAddress.get(),
         abi: Tetris.abi,
         eventName: "OrderCreated",
-        async listener(log) {
-            toast({
-                title: "Order Created Successfully",
-            })
+        async listener(logs) {
 
-            console.log(log);
+            if ((logs[0] as any).args.order.trader == address) {
+                allOrders.set([...allOrders.get(), (logs[0] as any).args.order as OrderStruct])
+            }
 
-            await refetchOrders?.()
         },
     })
 
+    useContractEvent({
+        address: context?.contractAddress.get(),
+        abi: Tetris.abi,
+        eventName: "OrderCancelled",
+        async listener(logs) {
+
+            const order: OrderStruct = (logs[0] as any).args.order
+            const newAllOrders: Array<OrderStruct> = []
+
+            allOrders.get().forEach((v) => {
+                if (v.timestamp == order.timestamp) {
+                    newAllOrders.push(order);
+                }
+                else { newAllOrders.push(v); }
+            })
+
+            allOrders.set(newAllOrders);
+
+        },
+    })
+
+    useContractEvent({
+        address: context?.contractAddress.get(),
+        abi: Tetris.abi,
+        eventName: "OrderMatched",
+        async listener(logs) {
 
 
 
-    useEffect(() => {
-        console.log(orderListData)
-    }, [orderListData])
+            const newAllOrders: Array<OrderStruct> = []
+
+            const sellOrder: OrderStruct = (logs[0] as any).args.sellOrder
+            const buyOrder: OrderStruct = (logs[0] as any).args.buyOrder
+
+            allOrders.get().forEach((v) => {
+                if (v.timestamp == sellOrder.timestamp) {
+                    newAllOrders.push(sellOrder);
+                } else if (v.timestamp == buyOrder.timestamp) {
+                    newAllOrders.push(buyOrder);
+                }
+                else { newAllOrders.push(v); }
+            })
+
+            allOrders.set(newAllOrders);
+        }
+    })
 
 
 
@@ -112,7 +151,7 @@ const OrderGrid = observer(() => {
                     {
                         (currentDisplayedOrders) && (currentDisplayedOrders.get()).map((v) => {
                             console.log("The ordertype from here is ", v.orderType);
-                            return <OrderListCard order={v} key={v.timestamp.toString()} />
+                            return <OrderListCardCombined order={v} key={v.timestamp.toString()} />
                         })
                     }
                 </div>
