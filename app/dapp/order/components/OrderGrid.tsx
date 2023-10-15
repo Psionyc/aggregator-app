@@ -12,6 +12,8 @@ import { observer, useComputed, useObservable } from "@legendapp/state/react";
 import OrderListCard from "@/components/dapp/order/ui/OrderListCard";
 import OrderListCardAbstract from "@/components/dapp/order/ui/OrderListCardAbstract";
 import OrderListCardCombined from "@/components/dapp/order/ui/OrderListCardCombined";
+import { Button } from "@nextui-org/react";
+import { cn } from "@/lib/utils";
 
 
 const OrderGrid = observer(() => {
@@ -19,6 +21,8 @@ const OrderGrid = observer(() => {
     const { address } = useAccount();
 
     const orderState = useObservable(OrderState.OPEN)
+    const maxShown = useObservable(5)
+    const maxShownMobile = useObservable(2)
 
     const allOrders = useObservable<Array<OrderStruct>>([]);
     const cancelledOrders = useComputed<Array<OrderStruct>>(() => {
@@ -60,8 +64,16 @@ const OrderGrid = observer(() => {
                 break;
         }
 
-        return orders;
-    }, [orderState])
+        const returnedOrders: Array<OrderStruct> = []
+
+        orders.forEach((v, i) => {
+            if (i < maxShown.get()) {
+                returnedOrders.push(v);
+            }
+        })
+
+        return returnedOrders;
+    }, [orderState, maxShownMobile, maxShown])
 
 
 
@@ -139,7 +151,7 @@ const OrderGrid = observer(() => {
 
 
     return (
-        <section className="user-orders w-full">
+        <section className="user-orders w-full ">
             <div className="w-full flex flex-col gap-y-4">
                 <div className="flex sort-parameters gap-2 md:gap-4 w-full h-10">
                     <OrderSortTab onClick={() => orderState.set(OrderState.OPEN)} active={orderState.get() == OrderState.OPEN}>OPEN</OrderSortTab>
@@ -155,6 +167,10 @@ const OrderGrid = observer(() => {
                         })
                     }
                 </div>
+            </div>
+
+            <div className="flex w-full items-center justify-center py-8">
+                <Button className={cn("bg-slate-700 text-white", currentDisplayedOrders.get().length < 1 ? "hidden" : "block")} hidden={currentDisplayedOrders.get().length < 1} onClick={() => maxShown.set(maxShown.get() + 5)}>Show More +</Button>
             </div>
         </section>);
 })

@@ -13,7 +13,7 @@ function Navbar() {
             <Link href={"/dapp/"}>
                 <div className="LEFT flex items-center gap-2">
                     <Image src={logo} height={24} width={24} alt="Logo" />
-                    <p className="text-[12px] md:text-[14px] font-semibold">THE AGGREGATOR</p>
+                    <p className="text-[12px] md:text-[14px] font-bold">THE AGGREGATOR</p>
                 </div>
             </Link>
             {/* <div className="MIDDLE hidden sm:flex items-center gap-4">

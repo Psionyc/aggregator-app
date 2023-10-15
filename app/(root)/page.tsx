@@ -31,14 +31,14 @@ export default function Home() {
   return (
 
 
-    <main className="w-full  px-[16px] md:px-[80px] lg:px-[100px] xl:[200px] text-white">
+    <main className="w-[100vw]  px-[16px] md:px-[80px] lg:px-[100px] xl:[200px] text-white">
 
       {/* <div  className="overlay z-10 bg-black w-full h-full fixed top-0 left-0 flex items-center justify-center  lg:hidden">
             <p className="font-bold text-center text-[24px]">This Device Is Currently Unsupported</p>
             
       </div> */}
 
-      <Image src={back_image} alt="back image" className={`fixed z-[-1] top-0 left-0 transition-all ease-linear opacity-40 md:opacity-100 scale-150 sm:scale-100`} style={{
+      <Image src={back_image} alt="back image" className={`fixed z-[-1] hidden md:block top-0 left-0 transition-all ease-linear opacity-40 md:opacity-100 scale-150 sm:scale-100`} style={{
         top: -y
       }} />
 

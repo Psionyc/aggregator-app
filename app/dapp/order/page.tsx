@@ -12,9 +12,8 @@ import { to18, toNormal } from "@/utils/decimals";
 import { useEffect, useMemo, useState } from "react";
 import OrderCard from "@/components/dapp/order/ui/OrderCard";
 import TetrisOrderBook from "@/assets/contracts/TetrisOrderBook.json"
-import OrderTable from "@/components/dapp/order/OrderTable";
 import { toast } from "@/components/ui/use-toast";
-import OrderChart from "@/components/dapp/order/OrderChart";
+
 import OrderBookLevelListItem from "@/components/dapp/order/ui/OrderBookList";
 import { Code2 } from "lucide-react"
 import { useQuery } from "@apollo/client";
