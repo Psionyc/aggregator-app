@@ -36,7 +36,7 @@ const Footer = () => {
                 <Link href={"/"}>Discord</Link>
             </div>
 
-            <p className="w-full text-center">TheAggregator &copy; 2023</p>
+            <p className="w-full text-center md:hidden">TheAggregator &copy; 2023</p>
         </div>
     </div>);
 }
