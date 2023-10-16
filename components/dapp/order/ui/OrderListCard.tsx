@@ -32,6 +32,9 @@ const OrderListCard = observer(({ order }: { order: OrderStruct }) => {
 
     const context = useOrderContext()
 
+    const baseTokenSymbol = context!.baseTokenSymbol;
+    const quoteTokenSymbol = context!.quoteTokenSymbol
+
     const priceR = useObservable(ethers.formatUnits(order.price.toString(), 9));
     const inputQuantityR = ethers.formatUnits(order.inputQuantity.toString(), 18);
     const inputSizeR = ethers.formatUnits(order.inputSize.toString(), 18);
@@ -60,17 +63,17 @@ const OrderListCard = observer(({ order }: { order: OrderStruct }) => {
                 <motion.div layout className="left flex flex-col justify-between items-start">
                     <motion.div className="flex flex-col gap-4">
                         <p className="text-[20px] font-semibold text-white">{Number(order.orderType) == 0 ? "BUY ORDER" : "SELL ORDER"}</p>
-                        <TitleAndLabel title="PRICE" label={priceR.get()} unit="USDC" />
+                        <TitleAndLabel title="PRICE" label={priceR.get()} unit={quoteTokenSymbol.get()} />
                     </motion.div>
 
 
 
                     {Number(order.orderType) == 0 ? <motion.div layout className="flex flex-col gap-4">
-                        <TitleAndLabel title="QUANTITY" label={inputQuantityR} unit="USDC" />
-                        <TitleAndLabel title="EXPECTED BASE" label={inputSizeR} unit="ETH" />
+                        <TitleAndLabel title="QUANTITY" label={inputQuantityR} unit={quoteTokenSymbol.get()} />
+                        <TitleAndLabel title="EXPECTED BASE" label={inputSizeR} unit={baseTokenSymbol.get()} />
                     </motion.div> : <motion.div layout className="flex flex-col gap-4">
-                        <TitleAndLabel title="SIZE" label={inputSizeR} unit="ETH" />
-                        <TitleAndLabel title="EXPECTED QUOTE" label={inputQuantityR} unit="USDC" />
+                        <TitleAndLabel title="SIZE" label={inputSizeR} unit={baseTokenSymbol.get()} />
+                        <TitleAndLabel title="EXPECTED QUOTE" label={inputQuantityR} unit={quoteTokenSymbol.get()} />
                     </motion.div>
                     }
                 </motion.div>
@@ -86,11 +89,11 @@ const OrderListCard = observer(({ order }: { order: OrderStruct }) => {
                         value={percentage} valueLabel={<ProgressLabel value={percentage} />} strokeWidth={48} size="lg" showValueLabel />
 
                     {Number(order.orderType) == 0 ? <motion.div layout className="flex flex-col gap-4">
-                        <TitleAndLabel title="QUANTITY USED" label={quantityUsedR} unit="USDC" />
-                        <TitleAndLabel title="BASE GOTTEN" label={sizeR} unit="ETH" />
+                        <TitleAndLabel title="QUANTITY USED" label={quantityUsedR} unit={quoteTokenSymbol.get()} />
+                        <TitleAndLabel title="BASE GOTTEN" label={sizeR} unit={baseTokenSymbol.get()} />
                     </motion.div> : <motion.div layout className="flex flex-col gap-4">
-                        <TitleAndLabel title="SIZE USED" label={sizeUsedR} unit="ETH" />
-                        <TitleAndLabel title="QUOTE GOTTEN" label={quantityR} unit="USDC" />
+                        <TitleAndLabel title="SIZE USED" label={Number(sizeUsedR).toPrecision(3)} unit={baseTokenSymbol.get()} />
+                        <TitleAndLabel title="QUOTE GOTTEN" label={quantityR} unit={quoteTokenSymbol.get()} />
                     </motion.div>
 
                     }

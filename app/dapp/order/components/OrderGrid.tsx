@@ -14,11 +14,15 @@ import OrderListCardAbstract from "@/components/dapp/order/ui/OrderListCardAbstr
 import OrderListCardCombined from "@/components/dapp/order/ui/OrderListCardCombined";
 import { Button } from "@nextui-org/react";
 import { cn } from "@/lib/utils";
+import OrderGridSearchBar from "@/components/dapp/order/ui/OrderGridSearchBar";
 
 
 const OrderGrid = observer(() => {
     const context = useOrderContext()
     const { address } = useAccount();
+
+    const baseTokenSymbol = context!.baseTokenSymbol;
+    const quoteTokenSymbol = context!.quoteTokenSymbol
 
     const orderState = useObservable(OrderState.OPEN)
     const maxShown = useObservable(5)
@@ -153,11 +157,14 @@ const OrderGrid = observer(() => {
     return (
         <section className="user-orders w-full ">
             <div className="w-full flex flex-col gap-y-4">
-                <div className="flex sort-parameters gap-2 md:gap-4 w-full h-10">
-                    <OrderSortTab onClick={() => orderState.set(OrderState.OPEN)} active={orderState.get() == OrderState.OPEN}>OPEN</OrderSortTab>
-                    <OrderSortTab onClick={() => orderState.set(OrderState.CANCEL)} active={orderState.get() == OrderState.CANCEL}>CANCELLED</OrderSortTab>
-                    <OrderSortTab onClick={() => orderState.set(OrderState.DONE)} active={orderState.get() == OrderState.DONE}>DONE</OrderSortTab>
-                    <OrderSortTab onClick={() => orderState.set(OrderState.ALL)} active={orderState.get() == OrderState.ALL} >ALL</OrderSortTab>
+                <div className="flex justify-between">
+                    <div className="flex sort-parameters gap-2 md:gap-4 w-full h-10">
+                        <OrderSortTab onClick={() => orderState.set(OrderState.OPEN)} active={orderState.get() == OrderState.OPEN}>OPEN</OrderSortTab>
+                        <OrderSortTab onClick={() => orderState.set(OrderState.CANCEL)} active={orderState.get() == OrderState.CANCEL}>CANCELLED</OrderSortTab>
+                        <OrderSortTab onClick={() => orderState.set(OrderState.DONE)} active={orderState.get() == OrderState.DONE}>DONE</OrderSortTab>
+                        <OrderSortTab onClick={() => orderState.set(OrderState.ALL)} active={orderState.get() == OrderState.ALL} >ALL</OrderSortTab>
+                    </div>
+                    <OrderGridSearchBar />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4 w-full">
                     {

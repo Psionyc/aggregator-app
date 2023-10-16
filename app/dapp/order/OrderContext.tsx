@@ -12,6 +12,8 @@ const OrderContext = createContext<
         contractAddress: Observable<`0x${string}`>,
         baseToken: Observable<`0x${string}`>,
         quoteToken: Observable<`0x${string}`>,
+        baseTokenSymbol: Observable<string>,
+        quoteTokenSymbol: Observable<string>,
         lastPrice?: bigint,
     } | null
 >(null)
@@ -20,12 +22,12 @@ const OrderContext = createContext<
 
 export const useOrderContext = () => useContext(OrderContext);
 
-export const useNormalize = ()=>{
+export const useNormalize = () => {
 
 }
 
 export const useNormalizePrice = () => {
-    
+
 }
 
 export const OrderContextProvider = OrderContext.Provider

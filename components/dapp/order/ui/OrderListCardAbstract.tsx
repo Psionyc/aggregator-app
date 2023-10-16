@@ -10,6 +10,7 @@ import { useContractWrite } from "wagmi";
 import { useOrderContext } from "@/app/dapp/order/OrderContext";
 import Tetris from "@/assets/contracts/TetrisOrderBook.json"
 import { motion } from "framer-motion";
+import { observer } from "@legendapp/state/react";
 
 const TitleAndLabel = ({ title, label, unit }: { title: string, label: ReactNode, unit?: string }) => {
     return (<motion.div layout className="flex flex-col gap-1">
@@ -27,9 +28,13 @@ const ProgressLabel = ({ value }: { value: number }) => {
     );
 }
 
-const OrderListCardAbstract = ({ order }: { order: OrderStruct }) => {
+const OrderListCardAbstract = observer(({ order }: { order: OrderStruct }) => {
 
     const context = useOrderContext()
+
+
+    const baseTokenSymbol = context!.baseTokenSymbol;
+    const quoteTokenSymbol = context!.quoteTokenSymbol
 
     console.log("Price here is ", order);
     const priceR = ethers.formatUnits(order.price.toString(), 9);
@@ -48,8 +53,8 @@ const OrderListCardAbstract = ({ order }: { order: OrderStruct }) => {
             <motion.div layout className={cn("grid grid-cols-2 w-full gap-y-2 bg-primary/20 rounded-[10px] py-2 px-4  border-1", Number(order.orderType) == 0 ? "border-green-600" : "border-red-600")} >
                 <motion.div layout className="flex flex-col gap-2">
                     <p className="text-[20px] font-semibold text-white">{Number(order.orderType) == 0 ? "BUY ORDER" : "SELL ORDER"}</p>
-                    <TitleAndLabel title="PRICE" label={priceR} unit="USDC" />
-                    {Number(order.orderType) == 0 ? <TitleAndLabel title="ETH" label={`${sizeR}/${inputSizeR}`} unit="ETH" /> : <TitleAndLabel title="ETH" label={`${sizeUsedR}/${inputSizeR}`} unit="ETH" />}
+                    <TitleAndLabel title="PRICE" label={priceR} unit={quoteTokenSymbol.get()} />
+                    {Number(order.orderType) == 0 ? <TitleAndLabel title={baseTokenSymbol.get()} label={`${Number(sizeR).toPrecision(3)}/${inputSizeR}`} unit={baseTokenSymbol.get()} /> : <TitleAndLabel title={baseTokenSymbol.get()} label={`${Number(sizeUsedR).toPrecision(3)}/${inputSizeR}`} unit={baseTokenSymbol.get()} />}
                 </motion.div>
                 <motion.div layout className="flex justify-end">
                     <CircularProgress
@@ -67,6 +72,6 @@ const OrderListCardAbstract = ({ order }: { order: OrderStruct }) => {
 
         </>
     );
-}
+})
 
 export default OrderListCardAbstract;

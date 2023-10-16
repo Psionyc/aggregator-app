@@ -48,6 +48,9 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
     const spendableBase = context?.baseSpendableBalance!;
     const spendableQuote = context?.quoteSpendableBalance!;
 
+    const baseTokenSymbol = context!.baseTokenSymbol;
+    const quoteTokenSymbol = context!.quoteTokenSymbol
+
 
 
     const { address, isConnecting, isDisconnected, isConnected, connector } = useAccount();
@@ -199,7 +202,7 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
                         <FormItem>
                             <FormControl>
                                 <div className="flex gap-0 relative">
-                                    <div className="absolute text-white right-3 top-0 h-full  flex flex-col justify-center text-sm">USDC</div>
+                                    <div className="absolute text-white right-3 top-0 h-full  flex flex-col justify-center text-sm">{quoteTokenSymbol.get()}</div>
                                     <div className="flex items-center text-white bg-slate-700 rounded-r-none rounded-l-md px-4 border-white/30 border-[1px] text-sm">Price</div>
                                     <Input placeholder="0.001" {...field} className="rounded-l-none bg-transparent border-white/30" />
                                 </div>
@@ -216,7 +219,7 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
                             <FormItem>
                                 <FormControl>
                                     <div className="flex gap-0 relative">
-                                        <div className="absolute text-white right-3 top-0 h-full  flex flex-col justify-center text-sm">ETH</div>
+                                        <div className="absolute text-white right-3 top-0 h-full  flex flex-col justify-center text-sm">{baseTokenSymbol.get()}</div>
                                         <div className="flex items-center text-white bg-slate-700 hover:bg-slate-700/50 rounded-r-none rounded-l-md px-4 border-white/30 border-[1px] text-sm">Size</div>
                                         <Input placeholder="100" {...field} className="rounded-none bg-transparent border-white/30" />
                                     </div>
@@ -233,7 +236,7 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
                             <FormItem>
                                 <FormControl>
                                     <div className="flex gap-0 relative">
-                                        <div className="absolute text-white right-3 top-0 h-full  flex flex-col justify-center text-sm">USDC</div>
+                                        <div className="absolute text-white right-3 top-0 h-full  flex flex-col justify-center text-sm">{quoteTokenSymbol.get()}</div>
                                         <Input placeholder="10" {...field} className="rounded-l-none bg-transparent border-white/30" />
                                     </div>
                                 </FormControl>
@@ -242,7 +245,7 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
                         )}
                     />
                 </div>
-                {isConnected && !createOrderIsLoading && <Button type="submit" className="w-full bg-slate-700 hover:bg-slate-700/50 mt-2">{orderType == "SELL" ? "Sell ETH" : "Buy ETH"}</Button>}
+                {isConnected && !createOrderIsLoading && <Button type="submit" className="w-full bg-slate-700 hover:bg-slate-700/50 mt-2">{orderType == "SELL" ? `Sell ${baseTokenSymbol.get()}` : `Buy ${baseTokenSymbol.get()}`}</Button>}
             </form>
         </Form>
         {isConnecting && <Button type="button" disabled className="w-full bg-slate-700 hover:bg-slate-700/50 animate-pulse mt-2">Connecting...</Button>}

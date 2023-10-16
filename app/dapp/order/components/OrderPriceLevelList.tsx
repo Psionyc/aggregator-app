@@ -12,8 +12,12 @@ const OrderPriceLevelList = () => {
 
     const context = useOrderContext()
     const { address } = useAccount();
+    
 
-    const orderbookContract = useObservable<`0x${string}`>(process.env.NEXT_PUBLIC_ORDERBOOK_CONTRACT as `0x${string}`)
+    const baseTokenSymbol = context!.baseTokenSymbol;
+    const quoteTokenSymbol = context!.quoteTokenSymbol
+
+    const orderbookContract = useObservable<`0x${string}`>(context!.contractAddress.get() as `0x${string}`)
 
     const {
         data: buyOrderLevels, isLoading: buyOrderLevelsLoading, refetch: buyOrderRefetch
@@ -38,10 +42,11 @@ const OrderPriceLevelList = () => {
         address: orderbookContract.get(),
         abi: Tetris.abi,
         eventName: "OrderLevelCreated",
-        async listener(event) { 
+        async listener(event) {
             console.log((event[0] as any).args.orderLevel);
-            
-            await buyOrderRefetch(); await sellOrderRefetch(); }
+
+            await buyOrderRefetch(); await sellOrderRefetch();
+        }
     })
 
     useContractEvent({
@@ -99,10 +104,10 @@ const OrderPriceLevelList = () => {
 
         <div className="grid grid-cols-2 text-white text-sm">
             <div className="main flex items-start flex-col">
-                <p>Size(ETH)</p>
+                <p>Size({baseTokenSymbol.get()})</p>
             </div>
             <div className="quote flex items-end flex-col">
-                <p>Price(USDT)</p>
+                <p>Price({quoteTokenSymbol.get()})</p>
             </div>
         </div>
 
@@ -114,7 +119,8 @@ const OrderPriceLevelList = () => {
             {
                 (sellOrderLevels as any) && (sellPriceLevels.get() as Array<OrderLevelStruct>).map((v) => {
 
-                    return <OrderBookLevelListItem key={Math.random()} size={v.size} price={v.price} percantage={(Number(v.overallSize - v.size) / Number(v.overallSize)) * 100} orderType="SELL" />
+
+                    return <OrderBookLevelListItem key={Math.random()} size={v.size} price={v.price} percantage={(Number(v.size) / Number(v.overallSize)) * 100} orderType="SELL" />
                 })
             }
 

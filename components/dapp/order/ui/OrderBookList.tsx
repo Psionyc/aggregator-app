@@ -18,7 +18,7 @@ const OrderBookLevelListItem = ({ size, price, orderType, percantage }: OrderBoo
             </div>
             <div style={{
                 width: `${percantage}%`
-            }} className={cn("absolute top-0 right-0 h-full", orderType == "BUY" ? "bg-green-500/50" : "bg-red-500/50")}></div>
+            }} className={cn("absolute top-0 right-0 h-full", orderType == "BUY" ? "bg-green-500/30" : "bg-red-500/30")}></div>
 
         </div>
     );
