@@ -1,6 +1,16 @@
 import { ethers } from "ethers";
 import { bigint } from "zod"
 
+export const intl = Intl.NumberFormat("en", {
+    notation: "standard",
+    // maximumSignificantDigits: 5,
+    // minimumIntegerDigits: 4,
+    maximumFractionDigits: 4,
+    minimumFractionDigits: 3
+    
+    
+})
+
 export const to18 = (value: number) => {
     if (!Number.isFinite(value)) return BigInt(0)
     if (Number.isNaN(value)) value = 0;
@@ -23,3 +33,4 @@ export const toNormal = (value: bigint) => {
 export function toReadable(amount: string, decimals: number) {
     return Number.parseFloat(ethers.formatUnits(amount, decimals)).toFixed(5);
 }
+

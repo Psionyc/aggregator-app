@@ -4,7 +4,7 @@ import Image from "next/image"
 import logo from "@/assets/main.svg"
 import Link from "next/link";
 import { Divider } from "@nextui-org/react";
-import { Separator } from "../ui/separator";
+import { Separator } from "../shadcn-ui/separator";
 import { SearchCode } from "lucide-react";
 
 const Footer = () => {

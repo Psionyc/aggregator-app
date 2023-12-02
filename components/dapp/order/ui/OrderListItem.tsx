@@ -1,6 +1,6 @@
 "use client"
 import { useOrderContext } from "@/app/dapp/order/OrderContext"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/shadcn-ui/button"
 import { toReadable } from "@/utils/decimals"
 import { computed } from "@legendapp/state"
 import { observer, useComputed } from "@legendapp/state/react"

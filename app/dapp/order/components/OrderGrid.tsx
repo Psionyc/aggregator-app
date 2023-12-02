@@ -1,16 +1,11 @@
 "use client"
 
 import { useAccount, useContractEvent, useContractRead } from "wagmi";
-import OrderListItem from "@/components/dapp/order/ui/OrderListItem";
 import OrderSortTab from "@/components/dapp/order/ui/OrderSortTab";
 import { useOrderContext } from "../OrderContext";
 import Tetris from "@/assets/contracts/TetrisOrderBook.json"
-import { useEffect } from "react";
-import { OrderState, OrderStruct } from "../types";
-import { toast } from "@/components/ui/use-toast";
+import { OrderState, OrderStruct } from "@/types/order";
 import { observer, useComputed, useObservable } from "@legendapp/state/react";
-import OrderListCard from "@/components/dapp/order/ui/OrderListCard";
-import OrderListCardAbstract from "@/components/dapp/order/ui/OrderListCardAbstract";
 import OrderListCardCombined from "@/components/dapp/order/ui/OrderListCardCombined";
 import { Button } from "@nextui-org/react";
 import { cn } from "@/lib/utils";

@@ -1,6 +1,6 @@
 import { Observable } from "@legendapp/state"
 import { createContext, useContext } from "react";
-import { OrderStruct } from "./types";
+import { OrderStruct } from "@/types/order";
 
 const OrderContext = createContext<
     {

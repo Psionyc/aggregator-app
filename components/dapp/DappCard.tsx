@@ -6,8 +6,8 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button";
+} from "@/components/shadcn-ui/card"
+import { Button } from "@/components/shadcn-ui/button";
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";

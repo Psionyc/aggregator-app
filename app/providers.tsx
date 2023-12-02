@@ -2,13 +2,11 @@
 
 import { NextUIProvider } from '@nextui-org/react'
 import { Chain, WagmiConfig, configureChains, createConfig } from "wagmi";
-import { HttpLink, from, ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { onError } from "@apollo/client/link/error";
 //@ts-ignore
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { baseGoerli, polygonMumbai } from 'viem/chains';
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@/components/shadcn-ui/toaster';
 import theme from "./theme.json"
 
 
@@ -43,28 +41,6 @@ const config = createConfig(
 
 
 
-
-
-
-
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-    if (graphQLErrors) {
-        graphQLErrors.map(({ message, locations, path }) => {
-            alert(`Graphql error ${message}`);
-        });
-    }
-});
-
-const link = from([
-    errorLink,
-    new HttpLink({ uri: "https://api.studio.thegraph.com/query/51706/orderbook/v0.0.4" }),
-]);
-
-const client = new ApolloClient({
-    cache: new InMemoryCache(),
-    link: link,
-});
-
 export default function Providers({
     children,
     font
@@ -73,8 +49,6 @@ export default function Providers({
 }) {
     return (
         <>
-
-            <ApolloProvider client={client}>
                 <WagmiConfig config={config}>
                     <ConnectKitProvider customTheme={{ ...theme }}>
                         <NextUIProvider>
@@ -82,7 +56,6 @@ export default function Providers({
                         </NextUIProvider>
                     </ConnectKitProvider>
                 </WagmiConfig>
-            </ApolloProvider>
             <Toaster />
         </>
     )

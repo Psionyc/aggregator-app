@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assets/main.svg"
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 //@ts-ignore
 import { ConnectKitButton } from 'connectkit';
 

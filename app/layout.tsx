@@ -1,5 +1,5 @@
 
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/shadcn-ui/toaster"
 import { Montserrat, Poppins } from 'next/font/google'
 import Providers from "./providers"
 

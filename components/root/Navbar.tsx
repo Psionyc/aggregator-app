@@ -3,7 +3,7 @@
 import logo from "@/assets/main.svg"
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "../ui/button";
+import { Button } from "../shadcn-ui/button";
 import { useRouter } from "next/navigation";
 
 

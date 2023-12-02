@@ -3,22 +3,22 @@
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/shadcn-ui/button"
 import {
     Form,
     FormControl,
     FormField,
     FormItem,
     FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@/components/shadcn-ui/form"
+import { Input } from "@/components/shadcn-ui/input"
 import { erc20ABI, useAccount, useContractRead, useContractWrite } from "wagmi";
 import { useEffect, useMemo, useState } from "react";
 //@ts-ignore
 import { ConnectKitButton } from "connectkit";
 import TetrisOrderBook from "@/assets/contracts/TetrisOrderBook.json"
 import { to18, to9 } from "@/utils/decimals";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/shadcn-ui/use-toast";
 import { ethers } from "ethers"
 import { useOrderContext } from "@/app/dapp/order/OrderContext";
 import { useObservable, useComputed } from "@legendapp/state/react";

@@ -2,11 +2,11 @@
 
 import { useObservable } from "@legendapp/state/react"
 import { erc20ABI, useAccount, useContractRead, useContractWrite, useContractEvent } from "wagmi";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import { to18, toNormal } from "@/utils/decimals";
 import { useEffect, useMemo, useState } from "react";
 import TetrisOrderBook from "@/assets/contracts/TetrisOrderBook.json"
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/components/shadcn-ui/use-toast";
 
 import { ethers } from "ethers";
 import TestErc20 from "@/assets/contracts/TestERC20.json";

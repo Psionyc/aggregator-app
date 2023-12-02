@@ -1,18 +1,18 @@
 "use client"
 
 import OrderBookLevelListItem from "@/components/dapp/order/ui/OrderBookList"
-import { toReadable } from "@/utils/decimals"
+import { intl, toReadable } from "@/utils/decimals"
 import { useComputed, useObservable } from "@legendapp/state/react"
 import { useAccount, useContractEvent, useContractRead } from "wagmi"
 import Tetris from "@/assets/contracts/TetrisOrderBook.json"
 import { useOrderContext } from "../OrderContext"
-import { OrderLevelStruct } from "../types"
+import { OrderLevelStruct } from "@/types/order"
 
 const OrderPriceLevelList = () => {
 
     const context = useOrderContext()
     const { address } = useAccount();
-    
+
 
     const baseTokenSymbol = context!.baseTokenSymbol;
     const quoteTokenSymbol = context!.quoteTokenSymbol
@@ -125,7 +125,7 @@ const OrderPriceLevelList = () => {
             }
 
 
-            <p className="text-green-500 font-semibold w-full text-center my-2">{lastPrice ? toReadable(lastPrice as string, 9) : "Loading"}</p>
+            <p className="text-green-500 font-semibold w-full text-center my-2">{lastPrice ? intl.format(Number(toReadable(lastPrice as string, 9))) : "Loading"}</p>
 
             {buyOrderLevelsLoading && <p className="animate-pulse text-white w-full text-center">Loading...</p>}
             {

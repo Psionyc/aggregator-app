@@ -1,15 +1,15 @@
 "use client"
 
-import { OrderStruct } from "@/app/dapp/order/types";
+import { OrderStruct } from "@/types/order";
 import { CircularProgress } from "@nextui-org/react";
 import { cn } from "@/lib/utils";
-import { ethers, id } from "ethers"
+import { ethers, id } from "ethers";
 import { ReactNode, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import { useContractWrite } from "wagmi";
 import { useOrderContext } from "@/app/dapp/order/OrderContext";
-import Tetris from "@/assets/contracts/TetrisOrderBook.json"
-import { motion } from "framer-motion"
+import Tetris from "@/assets/contracts/TetrisOrderBook.json";
+import { motion } from "framer-motion";
 import { observer, useObservable } from "@legendapp/state/react";
 
 const TitleAndLabel = ({ title, label, unit }: { title: string, label: ReactNode, unit?: string }) => {
@@ -31,6 +31,14 @@ const ProgressLabel = ({ value }: { value: number }) => {
 const OrderListCard = observer(({ order }: { order: OrderStruct }) => {
 
     const context = useOrderContext()
+
+    const intl = Intl.NumberFormat("en", {
+        notation: "compact",
+        maximumSignificantDigits: 5,
+        // maximumFractionDigits: 4,
+        // minimumFractionDigits: 3,
+
+    })
 
     const baseTokenSymbol = context!.baseTokenSymbol;
     const quoteTokenSymbol = context!.quoteTokenSymbol
@@ -69,11 +77,11 @@ const OrderListCard = observer(({ order }: { order: OrderStruct }) => {
 
 
                     {Number(order.orderType) == 0 ? <motion.div layout className="flex flex-col gap-4">
-                        <TitleAndLabel title="QUANTITY" label={inputQuantityR} unit={quoteTokenSymbol.get()} />
-                        <TitleAndLabel title="EXPECTED BASE" label={inputSizeR} unit={baseTokenSymbol.get()} />
+                        <TitleAndLabel title="QUANTITY" label={intl.format(Number(inputQuantityR))} unit={quoteTokenSymbol.get()} />
+                        <TitleAndLabel title="EXPECTED BASE" label={Number(inputSizeR).toPrecision(4)} unit={baseTokenSymbol.get()} />
                     </motion.div> : <motion.div layout className="flex flex-col gap-4">
-                        <TitleAndLabel title="SIZE" label={inputSizeR} unit={baseTokenSymbol.get()} />
-                        <TitleAndLabel title="EXPECTED QUOTE" label={inputQuantityR} unit={quoteTokenSymbol.get()} />
+                        <TitleAndLabel title="SIZE" label={Number(inputSizeR).toPrecision(4)} unit={baseTokenSymbol.get()} />
+                        <TitleAndLabel title="EXPECTED QUOTE" label={intl.format(Number(inputQuantityR))} unit={quoteTokenSymbol.get()} />
                     </motion.div>
                     }
                 </motion.div>
@@ -89,11 +97,11 @@ const OrderListCard = observer(({ order }: { order: OrderStruct }) => {
                         value={percentage} valueLabel={<ProgressLabel value={percentage} />} strokeWidth={48} size="lg" showValueLabel />
 
                     {Number(order.orderType) == 0 ? <motion.div layout className="flex flex-col gap-4">
-                        <TitleAndLabel title="QUANTITY USED" label={quantityUsedR} unit={quoteTokenSymbol.get()} />
-                        <TitleAndLabel title="BASE GOTTEN" label={sizeR} unit={baseTokenSymbol.get()} />
+                        <TitleAndLabel title="QUANTITY USED" label={intl.format(Number(quantityUsedR))} unit={quoteTokenSymbol.get()} />
+                        <TitleAndLabel title="BASE GOTTEN" label={Number(sizeR).toPrecision(4)} unit={baseTokenSymbol.get()} />
                     </motion.div> : <motion.div layout className="flex flex-col gap-4">
-                        <TitleAndLabel title="SIZE USED" label={Number(sizeUsedR).toPrecision(3)} unit={baseTokenSymbol.get()} />
-                        <TitleAndLabel title="QUOTE GOTTEN" label={quantityR} unit={quoteTokenSymbol.get()} />
+                        <TitleAndLabel title="SIZE USED" label={Number(sizeUsedR).toPrecision(4)} unit={baseTokenSymbol.get()} />
+                        <TitleAndLabel title="QUOTE GOTTEN" label={Number(quantityR).toPrecision(4)} unit={quoteTokenSymbol.get()} />
                     </motion.div>
 
                     }

@@ -1,16 +1,16 @@
 'use client';
 
 import { OrderBookForm } from "@/components/dapp/order/OrderbookForms";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/shadcn-ui/tabs"
 import { observer, useObservable } from "@legendapp/state/react"
 import { ChevronDown, InfoIcon, PlusCircle } from "lucide-react";
 import { erc20ABI, useAccount, useContractRead, useContractWrite, useContractEvent } from "wagmi";
 import TokenDivider from "@/components/dapp/order/ui/TokenDivider";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import { to18, toNormal } from "@/utils/decimals";
 import { useEffect, useMemo, useState } from "react";
 import TetrisOrderBook from "@/assets/contracts/TetrisOrderBook.json"
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/components/shadcn-ui/use-toast";
 import { ethers } from "ethers";
 import TestErc20 from "@/assets/contracts/TestERC20.json";
 import { ChartComponent } from "@/components/dapp/order/ui/TradingViewChart";

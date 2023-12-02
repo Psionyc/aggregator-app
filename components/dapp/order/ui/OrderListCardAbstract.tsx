@@ -5,7 +5,7 @@ import { CircularProgress } from "@nextui-org/react";
 import { cn } from "@/lib/utils";
 import { ethers, id } from "ethers"
 import { ReactNode } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import { useContractWrite } from "wagmi";
 import { useOrderContext } from "@/app/dapp/order/OrderContext";
 import Tetris from "@/assets/contracts/TetrisOrderBook.json"
@@ -54,7 +54,7 @@ const OrderListCardAbstract = observer(({ order }: { order: OrderStruct }) => {
                 <motion.div layout className="flex flex-col gap-2">
                     <p className="text-[20px] font-semibold text-white">{Number(order.orderType) == 0 ? "BUY ORDER" : "SELL ORDER"}</p>
                     <TitleAndLabel title="PRICE" label={priceR} unit={quoteTokenSymbol.get()} />
-                    {Number(order.orderType) == 0 ? <TitleAndLabel title={baseTokenSymbol.get()} label={`${Number(sizeR).toPrecision(3)}/${inputSizeR}`} unit={baseTokenSymbol.get()} /> : <TitleAndLabel title={baseTokenSymbol.get()} label={`${Number(sizeUsedR).toPrecision(3)}/${inputSizeR}`} unit={baseTokenSymbol.get()} />}
+                    {Number(order.orderType) == 0 ? <TitleAndLabel title={baseTokenSymbol.get()} label={`${Number(sizeR).toPrecision(4)}/${Number(inputSizeR).toPrecision(4)}`} unit={baseTokenSymbol.get()} /> : <TitleAndLabel title={baseTokenSymbol.get()} label={`${Number(sizeUsedR).toPrecision(3)}/${inputSizeR}`} unit={baseTokenSymbol.get()} />}
                 </motion.div>
                 <motion.div layout className="flex justify-end">
                     <CircularProgress
@@ -68,7 +68,6 @@ const OrderListCardAbstract = observer(({ order }: { order: OrderStruct }) => {
                         value={percentage} valueLabel={<ProgressLabel value={percentage} />} strokeWidth={48} showValueLabel />
                 </motion.div>
             </motion.div>
-
 
         </>
     );
