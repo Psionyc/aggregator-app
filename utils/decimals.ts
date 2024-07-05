@@ -5,8 +5,9 @@ export const intl = Intl.NumberFormat("en", {
     notation: "standard",
     // maximumSignificantDigits: 5,
     // minimumIntegerDigits: 4,
-    maximumFractionDigits: 4,
-    minimumFractionDigits: 3
+    
+    maximumFractionDigits: 6, 
+    
     
     
 })

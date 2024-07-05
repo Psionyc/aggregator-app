@@ -4,18 +4,65 @@ import { NextUIProvider } from '@nextui-org/react'
 import { Chain, WagmiConfig, configureChains, createConfig } from "wagmi";
 //@ts-ignore
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
-import { baseGoerli, polygonMumbai } from 'viem/chains';
+import { baseGoerli, } from 'viem/chains';
+import { defineChain } from 'viem';
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { Toaster } from '@/components/shadcn-ui/toaster';
 import theme from "./theme.json"
 
 
+const blastSepolia = defineChain({
+    id: 168587773,
+    network: "blast-speolia",
+    name: "Blast Sepolia",
+    rpcUrls: {
+        default: {
+            http: ["https://sepolia.blast.io"],
+            webSocket: ["wss://sepolia.blast.io"]
+        },
+        public: {
+            http: ["https://sepolia.blast.io"],
+        },
+    },
+    nativeCurrency: {
+        decimals: 18,
+        name: 'Ether',
+        symbol: 'ETH',
+    },
+    blockExplorers: {
+        default: { name: 'Explorer', url: 'https://testnet.blastscan.io/' },
+    },
+})
+
+const baseTestnet = defineChain({
+    id: 168587773,
+    network: "blast-speolia",
+    name: "Blast Sepolia",
+    rpcUrls: {
+        default: {
+            http: ["https://sepolia.blast.io"],
+            webSocket: ["wss://sepolia.blast.io"]
+        },
+        public: {
+            http: ["https://sepolia.blast.io"],
+        },
+    },
+    nativeCurrency: {
+        decimals: 18,
+        name: 'Ether',
+        symbol: 'ETH',
+    },
+    blockExplorers: {
+        default: { name: 'Explorer', url: 'https://testnet.blastscan.io/' },
+    },
+})
+
 const { publicClient, chains } = configureChains(
-    [baseGoerli],
+    [blastSepolia],
     [
         jsonRpcProvider({
             rpc: (chain: Chain) => {
-                return { http: "https://base-goerli.publicnode.com" };
+                return { http: "https://sepolia.blast.io" };
             },
         }),
     ],
@@ -49,13 +96,13 @@ export default function Providers({
 }) {
     return (
         <>
-                <WagmiConfig config={config}>
-                    <ConnectKitProvider customTheme={{ ...theme }}>
-                        <NextUIProvider>
-                            {children}
-                        </NextUIProvider>
-                    </ConnectKitProvider>
-                </WagmiConfig>
+            <WagmiConfig config={config}>
+                <ConnectKitProvider customTheme={{ ...theme }}>
+                    <NextUIProvider>
+                        {children}
+                    </NextUIProvider>
+                </ConnectKitProvider>
+            </WagmiConfig>
             <Toaster />
         </>
     )

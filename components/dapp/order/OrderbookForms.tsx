@@ -23,6 +23,7 @@ import { ethers } from "ethers"
 import { useOrderContext } from "@/app/dapp/order/OrderContext";
 import { useObservable, useComputed } from "@legendapp/state/react";
 import { formatGwei, parseEther, parseGwei, parseUnits } from "viem";
+import { useFeeManagerFee } from "@/hooks/useFeeManagerFee";
 
 
 
@@ -50,6 +51,7 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
 
     const baseTokenSymbol = context!.baseTokenSymbol;
     const quoteTokenSymbol = context!.quoteTokenSymbol
+    const fee = useFeeManagerFee()
 
 
 
@@ -161,7 +163,6 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
         address: context!.contractAddress.get(),
         functionName: "createOrder",
         args: computedArgs.get(),
-        
         onError(error) {
             toast({
                 title: "Transaction Error",
@@ -182,7 +183,9 @@ export const OrderBookForm = ({ buttonText, orderFunction, orderType }: OrderBoo
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            createOrder?.()
+            createOrder?.({
+                
+            })
 
         } catch (e) {
             console.log(e)

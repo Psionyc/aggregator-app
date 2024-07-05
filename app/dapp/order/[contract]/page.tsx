@@ -17,7 +17,6 @@ import { ChartComponent } from "@/components/dapp/order/ui/TradingViewChart";
 import { OrderContextProvider } from "../OrderContext";
 import OrderGrid from "../components/OrderGrid";
 import OrderPriceLevelList from "../components/OrderPriceLevelList";
-import { OrderStruct } from "../types";
 import { useParams } from "next/navigation";
 
 
