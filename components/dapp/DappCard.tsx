@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
 import {
     Card,
     CardContent,
@@ -21,7 +21,7 @@ interface DappCardProps {
 const DappCard: FunctionComponent<DappCardProps> = ({ title, description, url }: DappCardProps) => {
     return (<Card className="bg-transparent text-white border-primary">
         <CardHeader>
-            <CardTitle>{title ?? `OrderBook Trade`}</CardTitle>
+            <CardTitle>{title ?? "OrderBook Trade"}</CardTitle>
             {/* <CardDescription>Card Description</CardDescription> */}
         </CardHeader>
         <CardContent>

@@ -3,9 +3,10 @@ import { Toaster } from "@/components/shadcn-ui/toaster"
 import { Montserrat, Poppins } from 'next/font/google'
 import Providers from "./providers"
 
-const font = Montserrat({ 
+const font = Montserrat({
     variable: "--font-poppins",
-    subsets: ['latin'], weight: ["100", "200", "300", "400", "500", "600", "700", "800"] })
+    subsets: ['latin'], weight: ["100", "200", "300", "400", "500", "600", "700", "800"]
+})
 
 export default function Layout({
     children,
@@ -13,15 +14,14 @@ export default function Layout({
     children: React.ReactNode
 }) {
 
-   
+
     return (
 
         <html lang="en" className={font.variable}>
             <body suppressHydrationWarning className={font.className}>
-                <Providers font={font}>
+                <Providers>
                     {children}
                 </Providers>
-
                 <Toaster />
             </body>
         </html>

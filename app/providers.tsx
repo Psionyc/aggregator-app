@@ -1,7 +1,7 @@
 "use client"
 
 import { NextUIProvider } from '@nextui-org/react'
-import { Chain, WagmiConfig, configureChains, createConfig } from "wagmi";
+import { type Chain, WagmiConfig, configureChains, createConfig } from "wagmi";
 //@ts-ignore
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { baseGoerli, } from 'viem/chains';
@@ -57,12 +57,32 @@ const baseTestnet = defineChain({
     },
 })
 
+const arbSepolia = defineChain({
+    id: 168587773,
+    network: "arb-sepolia",
+    name: "Arb Sepolia",
+    rpcUrls: {
+        default: {
+            http: ["https://rpc.ankr.com/arbitrum_sepolia/8c2483e706f97c8cf87f93dcbf60abbd1dd99fe25e033768e12d89c6f7c5399b"],
+        },
+        public: {
+            http: ["https://arbitrum-sepolia.gateway.tenderly.co"],
+        },
+    },
+    nativeCurrency: {
+        decimals: 18,
+        name: 'Ether',
+        symbol: 'ETH',
+    },
+
+})
+
 const { publicClient, chains } = configureChains(
-    [blastSepolia],
+    [arbSepolia],
     [
         jsonRpcProvider({
             rpc: (chain: Chain) => {
-                return { http: "https://sepolia.blast.io" };
+                return { http: "https://arbitrum-sepolia.gateway.tenderly.co" };
             },
         }),
     ],
@@ -90,9 +110,9 @@ const config = createConfig(
 
 export default function Providers({
     children,
-    font
+
 }: {
-    children: React.ReactNode, font: any
+    children: React.ReactNode,
 }) {
     return (
         <>
