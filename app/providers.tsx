@@ -58,7 +58,7 @@ const baseTestnet = defineChain({
 })
 
 const arbSepolia = defineChain({
-    id: 168587773,
+    id: 421614,
     network: "arb-sepolia",
     name: "Arb Sepolia",
     rpcUrls: {

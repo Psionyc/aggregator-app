@@ -6,7 +6,7 @@ function Dapp() {
     return (
 
         <main>
-            <Image src={backImage} alt="back image" className={`fixed z-[-1] hidden md:block top-0 left-0 transition-all ease-linear opacity-40 md:opacity-100 scale-150 sm:scale-100`} style={{
+            <Image src={backImage} alt="back image" className={"fixed z-[-1] hidden md:block top-0 left-0 transition-all ease-linear opacity-40 md:opacity-100 scale-150 sm:scale-100"} style={{
 
             }} />
             <h2 className="text-white text-[48px] xl:text-[60px] mb-4 md:mb-8 text-center md:text-start mt-4 mb:mt-4 font-semibold">Our <span className="text-primary">Powerful DeFi</span> Tools</h2>
